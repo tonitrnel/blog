@@ -1,0 +1,107 @@
+<!DOCTYPE html><html class="theme-light" lang="zh-CN"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="astro"><meta name="theme-color" content="#ffffff"><link href="/favicon.png" rel="shortcut icon"><title>Windows terminal char encoding and proxy settings | 余烬缀记</title><meta name="title" content="Windows terminal char encoding and proxy settings"><link rel="alternate" type="application/rss+xml" title="Windows terminal char encoding and proxy settings" href="https://blog.ptdg.dev/rss.xml"><meta name="description" content="Windows的终端有时候回出现乱码，原因是Windows中文使用的是gbk编码，加之终端下载包慢，索性这次记录下"><link rel="preconnect" href="https://giscus.app"><link rel="preconnect" href="https://github.com"><meta property="og:title" content="Windows terminal char encoding and proxy settings"><meta property="og:description" content="Windows的终端有时候回出现乱码，原因是Windows中文使用的是gbk编码，加之终端下载包慢，索性这次记录下"><meta property="og:type" content="article"><meta property="article:author" content="揽余月"><meta property="article:published_time" content="2019-10-27T10:42:00.000Z"><meta property="og:image" content="https://blog.ptdg.dev/static/image_433odk7yzd/wallhaven-zm9wxg_w_640_1d2b.jpg"><meta property="og:image:alt" content="thumbnail"><meta property="og:image:width" content="640"><meta property="og:image:height" content="360"><script>
+  (function () {
+    if (typeof window !== 'undefined') {
+      const isSystemColorSchemeDark = window.matchMedia(
+        '(prefers-color-scheme: dark)'
+      ).matches;
+      const storageTheme = sessionStorage.getItem('theme');
+      if (!storageTheme && isSystemColorSchemeDark) {
+        document.documentElement.classList.remove('theme-light');
+        document.documentElement.classList.add('theme-dark');
+        document.head.children.namedItem('theme-color').content = '#0f172a';
+      } else if (storageTheme === 'dark') {
+        document.documentElement.classList.remove('theme-light');
+        document.documentElement.classList.add('theme-dark');
+        document.head.children.namedItem('theme-color').content = '#0f172a';
+      } else {
+        document.head.children.namedItem('theme-color').content = '#ffffff';
+      }
+    }
+  })();
+</script><link rel="stylesheet" href="/assets/categories.BCgvZBOu.css">
+<link rel="stylesheet" href="/assets/index.CMVC6H9V.css"><script type="module" src="/assets/hoisted.zSYPt0tS.js"></script></head> <body class="mx-auto min-h-screen px-6 sm:px-8"> <header class="fixed h-[120px] left-0 right-0 z-10 top-0 bg-white dark:bg-[var(--bg1)]"> <div class="flex items-center justify-between w-[640px] max-[640px]:w-[90%] m-auto h-full"> <h1 class="flex font-bold items-center gap-2"> <a href="/" class="no-underline text-[var(--text-normal)] text-base text-nowrap">余烬缀记</a> <span class="w-[8px] h-[10px] bg-[var(--color-orange)] block"></span> </h1> <nav class="flex flex-1 justify-end items-center mr-4"> <section class="text-text-bold"> <ul class="unset flex gap-4 [&>li]:p-0 list-none"> <li> <a href="/" class="no-underline hover:underline capitalize text-sm text-[var(--text-normal)]">Home</a> </li><li> <a href="/posts" class="no-underline hover:underline capitalize text-sm text-[var(--text-accent)]">Posts</a> </li><li> <a href="/categories" class="no-underline hover:underline capitalize text-sm text-[var(--text-normal)]">Categories</a> </li><li> <a href="/tags" class="no-underline hover:underline capitalize text-sm text-[var(--text-normal)]">Tags</a> </li> </ul> </section> </nav> <theme-switcher class="w-4 h-4 opacity-80 hover:opacity-100 mr-4 mt-1 max-[640px]:hidden"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><circle cx="12" cy="12" r="4"/>
+<path d="M12 2v2"/>
+<path d="M12 20v2"/>
+<path d="m4.93 4.93 1.41 1.41"/>
+<path d="m17.66 17.66 1.41 1.41"/>
+<path d="M2 12h2"/>
+<path d="M20 12h2"/>
+<path d="m6.34 17.66-1.41 1.41"/>
+<path d="m19.07 4.93-1.41 1.41"/></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg> </theme-switcher>   <div class="flex items-center border-none border-l border-solid border-grey-600 mt-1 max-[640px]:hidden"> <a href="https://github.com/tonitrnel" title="GitHub" target="_blank" class="inline-flex text-gray-700 hover:text-gray-800"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+<path d="M9 18c-4.51 2-5-2-7-2"/></svg> </a> </div> </div> </header>  <main class="w-[640px] max-[640px]:w-[100%] m-auto pt-[120px]  min-h-[calc(100vh-128px)]" id="main"> <section> <h1 class="mb-4 text-3xl font-extrabold text-black dark:text-white tracking-tight"> Windows terminal char encoding and proxy settings </h1> <div class="mb-8 text-gray-700 flex items-center gap-4"> <div class="flex gap-1 items-center text-sm"> <time datetime="2019-10-27T10:42:00.000Z">Oct 27, 2019</time>  <span>edited on:</span> <time datetime="2023-01-31T02:57:36.000Z"> Jan 31, 2023 </time>  </div> <div class="flex gap-1 items-center text-xs"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 stroke-gray-700"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg> <a class="text-gray-700 no-underline hover:underline" href="/categories/教程">教程</a> </div> </div> <article class="md w-full mt-10"> <p><picture data-width="3840" data-height="2160" data-raw-url="/static/image_433odk7yzd/wallhaven-zm9wxg.jpg"> <source srcset="/static/image_433odk7yzd/wallhaven-zm9wxg_w_640_2i1e.avif" type="image/avif"><source srcset="/static/image_433odk7yzd/wallhaven-zm9wxg_w_640_2i1e.webp" type="image/webp"><img src="/static/image_433odk7yzd/wallhaven-zm9wxg_w_640_1d2b.jpg" alt="wallhaven-zm9wxg.jpg"> </picture></p><h2 id="字符编码设置" class="group flex relative" data-heading="字符编码设置"> <a aria-label="link to this heading" aria-describedby="字符编码设置" href="#字符编码设置">#</a> 字符编码设置 </h2><p>控制面板 =&gt; 控制面板\时钟和区域 =&gt; 管理 =&gt; 非 Unicode 程序的语言</p><p><picture data-width="787" data-height="512" data-raw-url="/static/image_aquu6umdgr/image-20191027184650896.png"> <source srcset="/static/image_aquu6umdgr/image-20191027184650896_w_640_2i1e.avif" type="image/avif"><source srcset="/static/image_aquu6umdgr/image-20191027184650896_w_640_2i1e.webp" type="image/webp"><img src="/static/image_aquu6umdgr/image-20191027184650896_w_640_1d2b.png" alt="image-20191027184650896"> </picture></p><p><picture data-width="527" data-height="656" data-raw-url="/static/image_89x2am1jbs/image-20191027184830268.png"> <source srcset="/static/image_89x2am1jbs/image-20191027184830268_w_640_2i1e.avif" type="image/avif"><source srcset="/static/image_89x2am1jbs/image-20191027184830268_w_640_2i1e.webp" type="image/webp"><img src="/static/image_89x2am1jbs/image-20191027184830268_w_640_1d2b.png" alt="image-20191027184830268"> </picture></p><h2 id="终端网络代理" class="group flex relative" data-heading="终端网络代理"> <a aria-label="link to this heading" aria-describedby="终端网络代理" href="#终端网络代理">#</a> 终端网络代理 </h2><p>更快捷且临时的方式</p><pre class="language-powershell" data-language="powershell" tabindex="0"><code translate="no" class="language-powershell"><span class="token variable">$proxy</span>=<span class="token string">"http://127.0.0.1:10000"</span>
+<span class="token variable">$ENV</span>:HTTP_PROXY=<span class="token variable">$proxy</span>
+<span class="token variable">$ENV</span>:HTTPS_PROXY=<span class="token variable">$proxy</span>
+</code><button class="copy-code-button">复制</button></pre> <p><del>在开发时需要使用终端下载各种包，很多时候都是下载慢或者直接超时</del>（感觉没啥变化，该慢的还是慢），所以需要给终端设置代理（终端请求和浏览器请求等不通用）</p><ul class="has-list-bullet"><li> <p>CMD</p> <p>设置</p><pre class="language-bash" data-language="bash" tabindex="0"><code translate="no" class="language-bash"><span class="token builtin class-name">set</span> <span class="token assign-left variable">ALL_PROXY</span><span class="token operator">=</span>socks5:127.0.0.1:1080
+<span class="token comment"># 具体端口号和IP地址以及协议查看本机</span>
+</code><button class="copy-code-button">复制</button></pre> <p>取消</p><pre class="language-bash" data-language="bash" tabindex="0"><code translate="no" class="language-bash"><span class="token builtin class-name">set</span> <span class="token assign-left variable">ALL_PROXY</span><span class="token operator">=</span>
+</code><button class="copy-code-button">复制</button></pre>  </li><li> <p>PowerShell</p> <p>没找到直接的命令，所以在网上抄了一个脚本，执行后需重启终端</p><pre class="language-powershell" data-language="powershell" tabindex="0"><code translate="no" class="language-powershell"><span class="token comment"># NOTE: registry keys for IE 8, may vary for other versions</span>
+<span class="token comment"># Main menu, allowing user selection</span>
+<span class="token comment"># menu via https://www.reddit.com/r/PowerShell/comments/9plt0b/easy_tool_menu/</span>
+<span class="token keyword">function</span> <span class="token function">Show-Menu</span>
+<span class="token punctuation">{</span>
+     <span class="token keyword">param</span> <span class="token punctuation">(</span>
+           <span class="token namespace">[string]</span><span class="token variable">$Title</span> = <span class="token string">'代理设置工具'</span>
+     <span class="token punctuation">)</span>
+     <span class="token function">Clear-Host</span>
+     <span class="token function">Write-Host</span> <span class="token string">"================ <span class="token variable">$Title</span> ================"</span>
+  
+     <span class="token function">Write-Host</span> <span class="token string">"1: 输入 '1' 设置代理."</span>
+     <span class="token function">Write-Host</span> <span class="token string">"2: 输入 '2' 清除代理."</span>    
+     <span class="token function">Write-Host</span> <span class="token string">"Q: 输入 'Q' 退出."</span>
+<span class="token punctuation">}</span>
+  
+<span class="token comment">#Functions go here</span>
+  
+<span class="token variable">$regPath</span> = <span class="token string">'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings'</span>
+  
+<span class="token keyword">function</span> <span class="token function">Clear-Proxy</span>
+<span class="token punctuation">{</span>
+    <span class="token function">Set-ItemProperty</span> <span class="token operator">-</span>Path <span class="token variable">$regPath</span> <span class="token operator">-</span>Name ProxyEnable <span class="token operator">-</span>Value 0
+    <span class="token function">Set-ItemProperty</span> <span class="token operator">-</span>Path <span class="token variable">$regPath</span> <span class="token operator">-</span>Name ProxyServer <span class="token operator">-</span>Value <span class="token string">''</span>
+    <span class="token function">Set-ItemProperty</span> <span class="token operator">-</span>Path <span class="token variable">$regPath</span> <span class="token operator">-</span>Name ProxyOverride <span class="token operator">-</span>Value <span class="token string">''</span>
+  
+    <span class="token namespace">[Environment]</span>::SetEnvironmentVariable<span class="token punctuation">(</span><span class="token string">'all_proxy'</span><span class="token punctuation">,</span> <span class="token variable">$null</span><span class="token punctuation">,</span> <span class="token string">'User'</span><span class="token punctuation">)</span>
+<span class="token comment">#     [Environment]::SetEnvironmentVariable('https_proxy', $null, 'User')</span>
+<span class="token punctuation">}</span>
+  
+<span class="token keyword">function</span> <span class="token function">Set-Proxy</span>
+<span class="token punctuation">{</span>
+		<span class="token comment"># 你的代理地址</span>
+    <span class="token variable">$proxy</span> = <span class="token string">'socks5://127.0.0.1:1080'</span>
+  
+    <span class="token function">Set-ItemProperty</span> <span class="token operator">-</span>Path <span class="token variable">$regPath</span> <span class="token operator">-</span>Name ProxyEnable <span class="token operator">-</span>Value 1
+    <span class="token function">Set-ItemProperty</span> <span class="token operator">-</span>Path <span class="token variable">$regPath</span> <span class="token operator">-</span>Name ProxyServer <span class="token operator">-</span>Value <span class="token variable">$proxy</span>
+    <span class="token function">Set-ItemProperty</span> <span class="token operator">-</span>Path <span class="token variable">$regPath</span> <span class="token operator">-</span>Name ProxyOverride <span class="token operator">-</span>Value <span class="token string">'&lt;local>'</span>
+  
+    <span class="token namespace">[Environment]</span>::SetEnvironmentVariable<span class="token punctuation">(</span><span class="token string">'all_proxy'</span><span class="token punctuation">,</span> <span class="token variable">$proxy</span><span class="token punctuation">,</span> <span class="token string">'User'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+  
+<span class="token comment">#Main menu loop</span>
+<span class="token keyword">do</span>
+<span class="token punctuation">{</span>
+     <span class="token function">Show-Menu</span>
+     <span class="token variable">$input</span> = <span class="token function">Read-Host</span> <span class="token string">"请输入选择"</span>
+     <span class="token keyword">switch</span> <span class="token punctuation">(</span><span class="token variable">$input</span><span class="token punctuation">)</span>
+     <span class="token punctuation">{</span>
+           <span class="token string">'1'</span> <span class="token punctuation">{</span>
+                <span class="token function">Set-Proxy</span>
+                <span class="token function">Write-Host</span> <span class="token string">"设置代理成功"</span>
+                <span class="token keyword">return</span>
+           <span class="token punctuation">}</span> <span class="token string">'2'</span> <span class="token punctuation">{</span>
+                <span class="token function">Clear-Proxy</span>
+                <span class="token function">Write-Host</span> <span class="token string">"清除代理成功"</span>
+                <span class="token keyword">return</span>
+           <span class="token punctuation">}</span> <span class="token string">'q'</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span>
+           <span class="token punctuation">}</span>
+     <span class="token punctuation">}</span>
+     pause
+<span class="token punctuation">}</span>
+<span class="token keyword">until</span> <span class="token punctuation">(</span><span class="token variable">$input</span> <span class="token operator">-eq</span> <span class="token string">'q'</span><span class="token punctuation">)</span>
+</code><button class="copy-code-button">复制</button></pre>  </li></ul><p>代理设置成功与否可以使用命令：</p><pre class="language-sh" data-language="sh" tabindex="0"><code translate="no" class="language-sh"><span class="token function">curl</span> ip.gs
+</code><button class="copy-code-button">复制</button></pre> <p>上面会给出 IP 的信息</p><p>如果使用<code translate="no">pac</code>模式可以为名单中添加 yarn 和 npm 的源</p><pre class="language-text" data-language="text" tabindex="0"><code translate="no" class="language-text">registry.yarnpkg.com
+registry.npmjs.org
+</code><button class="copy-code-button">复制</button></pre>  </article> <div class="flex gap-1 items-center mt-8"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-gray-700"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>
+<circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg> <span class="flex gap-2 leading-none"> <a class="text-sm text-gray-600 hover:underline" href="/tags/windows">
+#windows </a><a class="text-sm text-gray-600 hover:underline" href="/tags/terminal">
+#terminal </a> </span> </div> <giscus-widget id="comments" class="comments" src="https://giscus.app/client.js" repo="tonitrnel/blog" repoid="MDEwOlJlcG9zaXRvcnkyMDI5MjQ4MDk=" category="Announcements" categoryid="DIC_kwDODBhjCc4CfRLe" mapping="og:title" strict="0" reactionsenabled="1" emitmetadata="0" inputposition="bottom" theme="light" lang="zh-CN" loading="lazy"></giscus-widget>  </section> </main> <footer class="w-[640px] max-[640px]:w-[100%] h-[80px] text-sm pt-6 mt-12 py-2 m-auto border-solid border-0 border-t border-gray-200 text-gray-600"> <p class="m-0"> <span>&copy; 2017-2024 Tonitrnel‘s Blog.</span> </p> </footer> <!-- build date: 2024-06-03T10:36:17.242Z --> </body></html>
