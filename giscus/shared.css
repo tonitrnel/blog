@@ -1,0 +1,333 @@
+/* The iframe has its own document; these tokens mirror src/styles/tokens.css. */
+main {
+  --color-fg-default: var(--ink);
+  --color-fg-muted: var(--muted);
+  --color-fg-subtle: var(--muted);
+  --color-canvas-default: var(--paper);
+  --color-canvas-overlay: var(--paper);
+  --color-canvas-inset: var(--soft);
+  --color-canvas-subtle: var(--soft);
+  --color-border-default: var(--line);
+  --color-border-muted: var(--line);
+  --color-neutral-muted: var(--soft);
+  --color-accent-fg: var(--accent);
+  --color-accent-emphasis: var(--accent);
+  --color-accent-muted: color-mix(in srgb, var(--accent) 35%, transparent);
+  --color-accent-subtle: color-mix(in srgb, var(--accent) 8%, var(--paper));
+  --color-btn-text: var(--ink);
+  --color-btn-bg: var(--paper);
+  --color-btn-border: var(--line);
+  --color-btn-hover-bg: var(--soft);
+  --color-btn-hover-border: var(--muted);
+  --color-btn-active-bg: var(--soft);
+  --color-btn-active-border: var(--muted);
+  --color-btn-selected-bg: var(--soft);
+  --color-btn-shadow: none;
+  --color-btn-inset-shadow: none;
+  --color-btn-primary-text: var(--button-text);
+  --color-btn-primary-bg: var(--accent);
+  --color-btn-primary-border: var(--accent);
+  --color-btn-primary-hover-bg: color-mix(in srgb, var(--accent) 90%, var(--ink));
+  --color-btn-primary-hover-border: var(--accent);
+  --color-btn-primary-selected-bg: var(--accent);
+  --color-btn-primary-shadow: none;
+  --color-btn-primary-inset-shadow: none;
+  --color-btn-primary-selected-shadow: none;
+  --color-btn-primary-disabled-text: var(--button-text);
+  --color-btn-primary-disabled-bg: color-mix(in srgb, var(--accent) 45%, var(--paper));
+  --color-btn-primary-disabled-border: transparent;
+  --color-action-list-item-default-hover-bg: var(--soft);
+  --color-segmented-control-bg: var(--soft);
+  --color-segmented-control-button-bg: var(--paper);
+  --color-segmented-control-button-selected-border: var(--line);
+  --color-primer-shadow-inset: none;
+  --color-social-reaction-bg-hover: var(--soft);
+  --color-social-reaction-bg-reacted-hover: var(--color-accent-subtle);
+  font-family: 'Iowan Old Style', 'Noto Serif SC', Georgia, serif;
+  color: var(--ink);
+}
+
+html, body, main { background: transparent; }
+
+main .gsc-main { gap: 1.25rem; }
+main .gsc-comments { gap: 1.25rem; }
+main .gsc-reactions {
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: .75rem;
+}
+main .gsc-reactions > div {
+  flex: 0 1 auto !important;
+  margin-top: 0 !important;
+}
+main .gsc-reactions-count a { color: var(--muted); }
+main .gsc-left-header em { font-size: .7rem !important; font-style: normal; }
+main .gsc-left-header a { text-decoration: none !important; }
+main .gsc-left-header a:hover { color: var(--accent); }
+
+main .gsc-header {
+  margin-bottom: 0;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+main .gsc-comments-count, main .gsc-reactions-count {
+  font-size: .9rem;
+  font-weight: 400;
+}
+
+/* One quiet writing surface; no nested input panels or focus outlines. */
+main .gsc-comment-box {
+  border: 1px solid var(--line);
+  border-radius: 2px !important;
+  padding: 0 1rem;
+  background: color-mix(in srgb, var(--soft) 15%, transparent);
+  box-shadow: none;
+}
+
+main .gsc-comment-box-tabs {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  border-bottom: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+main .gsc-comment-box-tabs > div:first-child {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  margin: 0 !important;
+}
+
+main .gsc-comment-box-tabs > div:first-child > button {
+  margin: 0 !important;
+  padding: .75rem 0 !important;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font: 400 .8rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  box-shadow: none;
+}
+
+main .gsc-comment-box-tabs > div:first-child > button:nth-of-type(2) { margin-left: auto !important; }
+
+/* Giscus moves these classes between the write and preview tabs. */
+main .gsc-comment-box-tabs > div:first-child > button.color-text-primary {
+  color: var(--accent);
+  box-shadow: inset 0 -2px var(--accent);
+}
+
+main .gsc-comment-box-tabs > div:first-child > button:hover { color: var(--accent); }
+main .gsc-comment-box-md-toolbar { display: none; }
+main .gsc-comment-box-main { margin: 0; padding: 0; }
+
+/* Giscus puts the focus ring on the textarea's wrapper. */
+main .gsc-comment-box-write,
+main .gsc-comment-box-write:focus-within {
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+}
+
+main .gsc-comment-box-textarea {
+  display: block;
+  width: 100%;
+  min-height: 8rem;
+  padding: .85rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 400 1rem/1.8 'Iowan Old Style', 'Noto Serif SC', Georgia, serif;
+  box-shadow: none;
+  resize: vertical;
+}
+
+main .gsc-comment-box-textarea::placeholder { color: var(--muted); opacity: .8; }
+main .gsc-comment-box-textarea:disabled { opacity: .65; }
+main .gsc-comment-box-textarea:focus,
+main .gsc-comment-box-textarea:focus-visible {
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+main .gsc-comment-box-textarea-extras {
+  display: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+main .gsc-comment-box-preview {
+  min-height: 8rem;
+  margin: 0;
+  padding: .85rem 0;
+  border: 0;
+  box-shadow: none;
+  font: 400 1rem/1.8 'Iowan Old Style', 'Noto Serif SC', Georgia, serif;
+}
+
+main .gsc-comment-box-bottom {
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: .75rem 0;
+  border-top: 0;
+}
+
+main .gsc-comment-box-markdown-hint { display: none !important; }
+
+main .gsc-comment-box-bottom > button {
+  color: var(--muted);
+  font: 400 .75rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+main .gsc-comment-box-buttons .btn {
+  padding: .5rem 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--accent);
+  font: 400 .8rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  box-shadow: none;
+  transition: color .15s, background-color .15s, border-color .15s;
+}
+
+main .gsc-comment-box-buttons .btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--button-text);
+}
+
+main .gsc-comment-box-buttons .btn:disabled {
+  border-color: var(--line);
+  color: var(--muted);
+  background: transparent;
+  opacity: .6;
+}
+
+main .gsc-comment-box button:focus-visible,
+main .gsc-comment-box a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Separate comments with a rule rather than enclosing each one in a card. */
+main .gsc-comment > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent;
+  box-shadow: none;
+}
+
+main .gsc-comment-header { grid-column: 1 / -1; grid-row: 1; padding: 0; }
+main .gsc-comment-content { grid-column: 1 / -1; grid-row: 2; padding: .5rem 0 .65rem 38px; }
+main .gsc-comment-footer {
+  grid-column: 1;
+  grid-row: 3;
+  justify-content: flex-start;
+  align-items: center;
+  gap: .85rem;
+  margin: 0;
+  padding: 0 0 1rem 38px;
+}
+main .gsc-comment-reactions, main .gsc-comment-replies-count { margin: 0; }
+main .gsc-comment-reactions .gsc-social-reaction-summary-item { background: transparent; }
+
+main .gsc-comment-author {
+  font-size: .8rem;
+  color: var(--muted);
+}
+
+main .gsc-comment-author a { text-decoration: none; }
+main .gsc-comment-author a:hover { color: var(--accent); }
+main .gsc-comment-author .color-box-border-info {
+  border: 0;
+  border-radius: 2px !important;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+main .gsc-replies, main .gsc-reply-box {
+  background: transparent;
+  border-color: var(--line);
+}
+main .gsc-replies { grid-column: 1 / -1; grid-row: 4; }
+
+main .gsc-reply-box {
+  grid-column: 2;
+  grid-row: 3;
+  align-self: start;
+  border-top: 0;
+  border-radius: 0;
+  padding: 0 0 1rem;
+}
+
+main .gsc-reply-box > button {
+  padding: .25rem 0 !important;
+  border: 0;
+  border-radius: 0 !important;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted);
+  font: 400 .85rem/1.6 'Iowan Old Style', 'Noto Serif SC', Georgia, serif;
+}
+
+main .gsc-reply-box > button:hover { color: var(--accent); }
+main .gsc-comment-box-is-reply {
+  grid-column: 1 / -1;
+  grid-row: 5;
+  margin-bottom: 1rem;
+}
+
+main .gsc-right-header { gap: .75rem; background: transparent; }
+main .gsc-right-header .BtnGroup-item {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+main .gsc-right-header .btn {
+  padding: .35rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
+  font: 400 .8rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+main .gsc-right-header [aria-current='true'] .btn {
+  color: var(--accent);
+  box-shadow: inset 0 -1px var(--accent);
+}
+main .gsc-right-header .btn:hover { color: var(--accent); }
+
+main .gsc-comment-content { font-size: 1rem; line-height: 1.8; }
+main .gsc-comment-content code, main .gsc-comment-content pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (max-width: 480px) {
+  main .gsc-header { flex-wrap: wrap; }
+  main .gsc-left-header { flex-wrap: wrap; }
+  main .gsc-comment-box { padding-inline: .75rem; }
+  main .gsc-comment > div { column-gap: .5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main .gsc-comment-box-buttons .btn { transition: none; }
+}

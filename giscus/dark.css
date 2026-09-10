@@ -1,0 +1,16 @@
+@import url('https://giscus.app/themes/dark.css');
+@import url('./shared.css');
+
+html {
+  /* Keep the iframe canvas transparent; theme native controls inside main. */
+  color-scheme: normal;
+  --paper: #1b1b19;
+  --ink: #eeeae0;
+  --muted: #aaa79b;
+  --line: #3d3c36;
+  --accent: #ee8969;
+  --soft: #2a2a26;
+  --button-text: #1b1b19;
+}
+
+main { color-scheme: dark; }

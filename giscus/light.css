@@ -1,0 +1,13 @@
+@import url('https://giscus.app/themes/light.css');
+@import url('./shared.css');
+
+html {
+  color-scheme: light;
+  --paper: #f6f5f0;
+  --ink: #191918;
+  --muted: #77766f;
+  --line: #d8d6cc;
+  --accent: #b0472e;
+  --soft: #e9e7de;
+  --button-text: #f6f5f0;
+}

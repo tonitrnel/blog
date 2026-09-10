@@ -1,0 +1,429 @@
+<!DOCTYPE html><html data-astro-transition-scope="astro-yztbsuuz-2" class="theme-light" lang="zh-CN" data-astro-cid-ju4pidww><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#f6f5f0"><link href="/favicon.svg" rel="icon" type="image/svg+xml"><title>MacOS 上 Tailscale 与 Mihomo（TUN 模式） 完美（或许是）共存的方式</title><link rel="canonical" href="https://blog.ptdg.dev/posts/2025-11-05-MacOS%20%E4%B8%8A%20Tailscale%20%E4%B8%8E%20Mihomo%EF%BC%88TUN%20%E6%A8%A1%E5%BC%8F%EF%BC%89%20%E5%AE%8C%E7%BE%8E%EF%BC%88%E6%88%96%E8%AE%B8%E6%98%AF%EF%BC%89%E5%85%B1%E5%AD%98%E7%9A%84%E6%96%B9%E5%BC%8F/"><meta name="title" content="MacOS 上 Tailscale 与 Mihomo（TUN 模式） 完美（或许是）共存的方式"><meta name="description" content="这是一个空白的画卷，我用其为未来制作一丝回忆"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"MacOS 上 Tailscale 与 Mihomo（TUN 模式） 完美（或许是）共存的方式","description":"这是一个空白的画卷，我用其为未来制作一丝回忆","author":{"@type":"Person","name":"拂若華"},"datePublished":"2025-11-05T15:45:00.000Z","dateModified":"2026-09-08T22:55:10.740Z","keywords":"network","articleSection":"记录","wordCount":2110}</script><meta property="og:title" content="MacOS 上 Tailscale 与 Mihomo（TUN 模式） 完美（或许是）共存的方式"><meta property="og:description" content="这是一个空白的画卷，我用其为未来制作一丝回忆"><meta property="og:url" content="https://blog.ptdg.dev/posts/2025-11-05-MacOS%20%E4%B8%8A%20Tailscale%20%E4%B8%8E%20Mihomo%EF%BC%88TUN%20%E6%A8%A1%E5%BC%8F%EF%BC%89%20%E5%AE%8C%E7%BE%8E%EF%BC%88%E6%88%96%E8%AE%B8%E6%98%AF%EF%BC%89%E5%85%B1%E5%AD%98%E7%9A%84%E6%96%B9%E5%BC%8F/"><meta property="og:type" content="article"><meta property="article:author" content="拂若華"><meta property="article:published_time" content="2025-11-05T15:45:00.000Z"><script>
+  (function () {
+    function applyTheme() {
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const storageTheme = sessionStorage.getItem('theme');
+      const isDark = storageTheme === 'dark' || (!storageTheme && isSystemDark);
+      const themeColor = document.head.children.namedItem('theme-color');
+      if (isDark) {
+        document.documentElement.classList.remove('theme-light');
+        document.documentElement.classList.add('theme-dark');
+        if (themeColor) themeColor.content = '#1b1b19';
+      } else {
+        document.documentElement.classList.remove('theme-dark');
+        document.documentElement.classList.add('theme-light');
+        if (themeColor) themeColor.content = '#f6f5f0';
+      }
+    }
+    applyTheme();
+    document.addEventListener('astro:after-swap', applyTheme);
+  })();
+</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/assets/ClientRouter.astro_astro_type_script_index_0_lang.Ckbx0Etl.js"></script><script type="module" src="/assets/Layout.astro_astro_type_script_index_0_lang.CHzLsb3o.js"></script><link rel="stylesheet" href="/assets/Renderer.BPQMiJuM.css"><link rel="stylesheet" href="/assets/Helmet.BYnb6_pI.css"><link rel="stylesheet" href="/assets/_slug_.BhOkEj1n.css"><style>[data-astro-transition-scope="astro-2uohob67-1"] { view-transition-name: post-title-3d1bff97bc5e4de1; }@layer astro { ::view-transition-old(post-title-3d1bff97bc5e4de1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(post-title-3d1bff97bc5e4de1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(post-title-3d1bff97bc5e4de1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(post-title-3d1bff97bc5e4de1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-yztbsuuz-2"] { view-transition-name: site-root; }@layer astro { ::view-transition-old(site-root) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(site-root) { animation: none; mix-blend-mode: normal; }::view-transition-group(site-root) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-yztbsuuz-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-yztbsuuz-2"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-yztbsuuz-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-yztbsuuz-2"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-jgduxsen-3"] { view-transition-name: page-content; }@layer astro { ::view-transition-old(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-out; }::view-transition-new(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-in; }[data-astro-transition=back]::view-transition-old(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-out; }[data-astro-transition=back]::view-transition-new(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-in; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-out; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-in; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-out; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-in; }</style><style>[data-astro-transition-scope="astro-f4pvgsiq-4"] { view-transition-name: feather-background; }@layer astro { ::view-transition-old(feather-background) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(feather-background) { animation: none; mix-blend-mode: normal; }::view-transition-group(feather-background) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-f4pvgsiq-4"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-f4pvgsiq-4"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-f4pvgsiq-4"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-f4pvgsiq-4"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-pcq43t4g-5"] { view-transition-name: site-header; }@layer astro { ::view-transition-old(site-header) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(site-header) { animation: none; mix-blend-mode: normal; }::view-transition-group(site-header) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-pcq43t4g-5"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-pcq43t4g-5"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-pcq43t4g-5"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-pcq43t4g-5"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-jregkupr-6"] { view-transition-name: site-footer; }@layer astro { ::view-transition-old(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head><body data-astro-cid-ju4pidww><raven-background class="feather-background" aria-hidden="true" data-astro-transition-scope="astro-f4pvgsiq-4" data-astro-transition-persist="feather-background" data-astro-cid-qz57aosd="true"><svg class="snow snow-right" viewBox="0 0 160 300" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#snow-right" data-astro-cid-qz57aosd></use></svg><svg class="snow snow-left" viewBox="0 0 100 180" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#snow-left" data-astro-cid-qz57aosd></use></svg><div class="feather-lane drifting-lane" data-astro-cid-qz57aosd><svg class="feather drifting" viewBox="0 0 120 320" fill="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#feather" data-astro-cid-qz57aosd></use></svg></div><div class="feather-lane fragment-lane" data-astro-cid-qz57aosd><svg class="feather fragment" viewBox="0 0 120 320" fill="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#feather" data-astro-cid-qz57aosd></use></svg></div></raven-background><!-- Initialize before the first paint instead of waiting for the shared module. --><script>
+  (() => {
+    if (customElements.get('raven-background')) return;
+    // Native page loads must reuse the same arrangement as client navigation.
+    let seed = 1;
+    try {
+      const saved = Number(sessionStorage.getItem('feather-seed'));
+      seed = Number.isInteger(saved) && saved > 0 && saved < 2147483647
+        ? saved : Math.floor(Math.random() * 2147483646) + 1;
+      sessionStorage.setItem('feather-seed', String(seed));
+    } catch {
+      // A fixed seed keeps the background stable when storage is unavailable.
+      seed = 1;
+    }
+    const random = () => {
+      seed = seed * 16807 % 2147483647;
+      return (seed - 1) / 2147483646;
+    };
+    const arrangements = [0, 1].map((index) => ({
+      top: `${(index ? 60 : 15) + random() * (index ? 17 : 25)}%`,
+      angle: `${(index ? 35 : -28) + random() * 45 + (random() < .35 ? 180 : 0)}deg`,
+      scale: String((index ? .35 : .8) + random() * .18),
+      inset: `${-.5 + random()}rem`,
+      shape: ['full', 'slender', 'swept'][Math.floor(random() * 3)],
+    }));
+    customElements.define('raven-background', class extends HTMLElement {
+      connectedCallback() {
+        this.querySelectorAll('.feather').forEach((feather, index) => {
+          const arrangement = arrangements[index];
+          if (!arrangement) return;
+          for (const key of ['top', 'angle', 'scale', 'inset']) {
+            feather.style.setProperty(`--${key}`, arrangement[key]);
+          }
+          feather.dataset.shape = arrangement.shape;
+        });
+      }
+    });
+  })();
+</script><header data-astro-transition-scope="astro-pcq43t4g-5" class="header" role="banner" aria-label="网站页头"><div class="header-inner"><h1 class="header-title" aria-label="网站标题"><a href="/" class="site-brand" aria-label="返回首页"><svg class="brand-raven" viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><!-- A perched corvid, with a heavy bill and etched wing feathers. --><path d="M29 167 62 117C72 103 89 95 105 79L124 48C132 33 153 30 167 39L178 51 208 65 176 69C172 93 169 116 149 134L113 151 55 174 68 153Z" fill="currentColor"></path><path d="M111 89C91 110 80 130 64 153M123 92C109 113 96 132 80 145M134 94C124 114 113 130 99 139M145 94C140 111 133 124 121 131" stroke="var(--paper)" stroke-width="1.3" opacity=".48"></path><path d="m131 139 2 30 15 7m-15-7-10 7m25-40 8 31 15 6m-15-6-7 9" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="161" cy="52" r="2.5" fill="var(--paper)"></circle><path d="m180 60 19 5" stroke="var(--paper)" stroke-width="1" opacity=".6"></path><path d="M17 178c64-5 132 4 208-2" stroke="currentColor" stroke-width="1.2"></path></svg>繪畫世界</a></h1><nav class="nav-menu header-nav" aria-label="主导航菜单" role="navigation" data-astro-cid-xr2ojvak><ul class="nav-menu-list" aria-label="主导航菜单列表" role="list" data-astro-cid-xr2ojvak><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/posts/" class="nav-link is-active" itemprop="url" aria-current="page" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>文章</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/categories/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>分類</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/tags/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>標籤</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/projects/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>項目</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/about/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>關於</a></li></ul></nav><a class="icon-control header-action" href="/search/" aria-label="网站搜索" role="button" title="打开搜索"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><path d="m21 21-4.34-4.34"/>
+<circle cx="11" cy="11" r="8"/></svg></a><theme-control class="icon-control header-action" role="button" aria-label="切换主题配色" title="切换深色/浅色模式"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><circle cx="12" cy="12" r="4"/>
+<path d="M12 2v2"/>
+<path d="M12 20v2"/>
+<path d="m4.93 4.93 1.41 1.41"/>
+<path d="m17.66 17.66 1.41 1.41"/>
+<path d="M2 12h2"/>
+<path d="M20 12h2"/>
+<path d="m6.34 17.66-1.41 1.41"/>
+<path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></theme-control><mobile-nav class="mobile-nav" aria-label="移动导航"><button type="button" id="nav-menu-toggle" aria-label="打开导航菜单" aria-expanded="false" aria-controls="mobile-nav-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path class="menu-lines" d="M4 6h16M4 12h16M4 18h16"></path><path class="menu-close" d="m6 6 12 12M6 18 18 6"></path></svg></button><nav id="mobile-nav-menu" aria-label="移动导航菜单" hidden><ul class="mobile-nav-list"><li class="mobile-nav-item"><a href="/posts/" class="nav-link is-active" itemprop="url" aria-current="page" data-astro-cid-hwj3apfd>文章</a></li><li class="mobile-nav-item"><a href="/categories/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>分類</a></li><li class="mobile-nav-item"><a href="/tags/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>標籤</a></li><li class="mobile-nav-item"><a href="/projects/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>項目</a></li><li class="mobile-nav-item"><a href="/about/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>關於</a></li></ul></nav></mobile-nav></div></header><div data-astro-transition-scope="astro-jgduxsen-3" data-astro-cid-ju4pidww><main class="container post-page" role="main" aria-label="文章正文"><div class="post-opening"><header class="post-heading"><time class="post-published" datetime="2025-11-05T15:45:00.000Z" aria-label="发布日期">2025年11月5日</time><h1 class="md-title" aria-label="文章标题"><span data-astro-transition-scope="astro-2uohob67-1" class="transition-title">MacOS 上 Tailscale 与 Mihomo（TUN 模式） 完美（或许是）共存的方式</span></h1></header></div><div class="post-reading"><post-toc><aside class="toc-sidebar" aria-label="文章目录"><div class="toc-panel"><span class="toc-title">本文目录</span><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="post-toc-links"><span>本文目录</span><span class="toc-chevron" aria-hidden="true">⌄</span></button><nav id="post-toc-links" aria-label="文章标题导航"><ol><li><a href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E4%B8%A4%E4%B8%AA%E2%80%9C%E8%99%9A%E6%8B%9F%E7%BD%91%E5%8D%A1%E2%80%9D%E7%9A%84%E6%88%98%E4%BA%89" style="--depth: 0">前言：两个“虚拟网卡”的战争</a></li><li><a href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF" style="--depth: 0">核心思路</a></li><li><a href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%9AMihomo%20%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9" style="--depth: 0">步骤一：Mihomo 配置修改</a></li><li><a href="#1.%20%E5%9B%BA%E5%AE%9A%20Tun%20%E6%8E%A5%E5%8F%A3%E5%B9%B6%E6%8E%92%E9%99%A4%E8%B7%AF%E7%94%B1" style="--depth: 1">1. 固定 Tun 接口并排除路由</a></li><li><a href="#2.%20%E5%A4%84%E7%90%86%20DNS%20%E9%97%AE%E9%A2%98%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89" style="--depth: 1">2. 处理 DNS 问题（可选）</a></li><li><a href="#3.%20%E6%8E%A5%E5%8F%A3%E7%BB%91%E5%AE%9A" style="--depth: 1">3. 接口绑定</a></li><li><a href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%9AmacOS%20%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E5%BF%BD%E7%95%A5%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%8C%E5%A6%82%E6%9E%9C%E4%B8%8D%E6%83%B3%E8%B5%B0%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%89" style="--depth: 0">步骤二：macOS 配置代理忽略（可选，如果不想走步骤一）</a></li><li><a href="#%E6%80%BB%E7%BB%93" style="--depth: 0">总结</a></li></ol></nav></div></aside></post-toc><article class="md-content post-content" aria-label="文章内容"><h2 id="前言：两个“虚拟网卡”的战争" class="markdown-heading" data-heading="前言：两个“虚拟网卡”的战争" tabindex="-1"><a aria-label="link to this heading" aria-describedby="前言：两个“虚拟网卡”的战争" href="#%E5%89%8D%E8%A8%80%EF%BC%9A%E4%B8%A4%E4%B8%AA%E2%80%9C%E8%99%9A%E6%8B%9F%E7%BD%91%E5%8D%A1%E2%80%9D%E7%9A%84%E6%88%98%E4%BA%89">#</a>前言：两个“虚拟网卡”的战争</h2><p>我属于这两个软件的老用户了，但是它们喜欢打架，原因很简单：<strong>它们都在争夺路由表的控制权</strong>。</p><ul class="has-list-bullet"><li>Mihomo（TUN 模式）：为了接管系统流量，默认会创建 <code translate="no">0.0.0.0/1</code> 和 <code translate="no">128.0.0.0/1</code> 这种覆盖全面的路由规则，将所有流量吸入自己的虚拟网卡</li><li>Tailscale：依靠 <code translate="no">utun</code> 接口和 <code translate="no">100.64.0.0/10</code> 路由实现内网互连。</li></ul><p>当 Mihomo 开启 Tun 后，Tailscale 的流量会被 Mihomo 劫持。之前在网上看到建议使用 Userspace 模式（即放弃虚拟网卡转而启动一个 Socks5 监听，然后让 Mihomo 把流量转过去）。在 Mac 上，GUI 版本的 Tailscale 是不支持的，于是我卸载了它，禁用系统保护移除了 <code translate="no">sudo systemextensionsctl uninstall W5364U7YZB io.tailscale.ipn.macsys.network-extension</code> 再通过 brew 安装了 CLI 版本的 tailscale 体验了下，感觉很差，原因如下：</p><p>SSH 无法使用，这是直接阻止我使用的理由，原本想的是：我不提供服务，TUN 模式或许不需要。实际这一点就把我劝回去了。或许是因为是用户态代理，所以不能支持 SSH，这里没有具体研究细节。</p><p>遂放弃这个方案我又回到最开始的思路，在看了一下参考配置后有一个大概的新的思路。</p><h2 id="核心思路" class="markdown-heading" data-heading="核心思路" tabindex="-1"><a aria-label="link to this heading" aria-describedby="核心思路" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">#</a>核心思路</h2><p>在不断尝试中我发现 <code translate="no">curl</code> 通常能直接访问，但是 <code translate="no">Chrome</code> 不能访问，而它们的区别或许就是这两类：<strong>系统代理流量（Chrome/浏览器等遵循系统代理配置的软件）</strong> 和 <strong>内核直连流量（终端/SSH/CURL）</strong></p><p>因此主要需要做这三件事：</p><ol><li>物理层隔离：通过路由表，让 Tailscale 流量不进入 Mihomo 的 TUN 接口</li><li>应用层直连：通过 macOS 系统设置，让浏览器访问内网时不走代理，即“忽略这些主机与域的代理设置”</li><li>兜底策略：如果流量还是进入了 Mihomo，让 Mihomo 把流量发回 Tailscale 去</li></ol><h2 id="步骤一：Mihomo 配置修改" class="markdown-heading" data-heading="步骤一：Mihomo 配置修改" tabindex="-1"><a aria-label="link to this heading" aria-describedby="步骤一：Mihomo 配置修改" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%9AMihomo%20%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9">#</a>步骤一：Mihomo 配置修改</h2><h3 id="1. 固定 Tun 接口并排除路由" class="markdown-heading" data-heading="1. 固定 Tun 接口并排除路由" tabindex="-1"><a aria-label="link to this heading" aria-describedby="1. 固定 Tun 接口并排除路由" href="#1.%20%E5%9B%BA%E5%AE%9A%20Tun%20%E6%8E%A5%E5%8F%A3%E5%B9%B6%E6%8E%92%E9%99%A4%E8%B7%AF%E7%94%B1">#</a>1. 固定 Tun 接口并排除路由</h3><p>Mihomo 默认随机占用 <code translate="no">utun</code>，这需要固定下来，并显式排出 Tailscale 网段。在 <code translate="no">config.yaml</code> 的 <code translate="no">tun</code> 字段中：</p><div class="code-block"><pre class="shiki highlighting language-yaml" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="yaml"><code class="language-yaml"><span class="line"><span style="color:var(--shiki-token-keyword)">tun</span><span style="color:var(--shiki-token-keyword)">:</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  enable</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> true</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  stack</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> system</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  device</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> utun233</span><span style="color:var(--shiki-token-comment)">           # 关键：固定网卡名，防止和 Tailscale 抢低号段，这将降低后续更新配置的概率</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  auto-route</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> true</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  auto-detect-interface</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-comment)"> # 保持开启，否则无法上网</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  </span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">  # 关键：告诉内核，这部分流量直接走 Tailscale，别进 Mihomo</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  inet4-route-exclude-address</span><span style="color:var(--shiki-token-keyword)">:</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    - </span><span style="color:var(--shiki-token-string-expression)">100.64.0.0/10</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  inet6-route-exclude-address</span><span style="color:var(--shiki-token-keyword)">:</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    - </span><span style="color:var(--shiki-token-string-expression)">fd7a:115c:a1e0::/48</span><span style="color:var(--shiki-token-comment)">   # 根据你的 Tailscale IPv6 修改</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="2. 处理 DNS 问题（可选）" class="markdown-heading" data-heading="2. 处理 DNS 问题（可选）" tabindex="-1"><a aria-label="link to this heading" aria-describedby="2. 处理 DNS 问题（可选）" href="#2.%20%E5%A4%84%E7%90%86%20DNS%20%E9%97%AE%E9%A2%98%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89">#</a>2. 处理 DNS 问题（可选）</h3><p>为了让 Chrome 能正确解析内网域名，而不是返回 Fake-IP， 需要修改 <code translate="no">dns</code> 配置</p><div class="code-block"><pre class="shiki highlighting language-yaml" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="yaml"><code class="language-yaml"><span class="line"><span style="color:var(--shiki-token-keyword)">dns</span><span style="color:var(--shiki-token-keyword)">:</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  enable</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> true</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  enhanced-mode</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> fake-ip</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  fake-ip-filter</span><span style="color:var(--shiki-token-keyword)">:</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    - </span><span style="color:var(--shiki-token-string-expression)">'+.ts.net'</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    - </span><span style="color:var(--shiki-token-string-expression)">'+.tailscale.com'</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    - </span><span style="color:var(--shiki-token-string-expression)">'+.你的内网域名.dev'</span><span style="color:var(--shiki-token-comment)"> # 如果有的话</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="3. 接口绑定" class="markdown-heading" data-heading="3. 接口绑定" tabindex="-1"><a aria-label="link to this heading" aria-describedby="3. 接口绑定" href="#3.%20%E6%8E%A5%E5%8F%A3%E7%BB%91%E5%AE%9A">#</a>3. 接口绑定</h3><p>这是让流量回到 Tailscale 的关键，如果 Chrome 依然把流量发给了 Mihomo，Mihomo 默认会走物理网卡（<code translate="no">en0</code>）导致不通。我们需要将这些流量转入 Tailscale 的网卡。</p><p>先在终端运行 <code translate="no">ifconfig</code> 确认 Tailscale 的网卡名（通常是 <code translate="no">utun6</code> 或 <code translate="no">utun3</code> 等）</p><p>在 <code translate="no">proxies</code> 中添加一个专用节点：</p><div class="code-block"><pre class="shiki highlighting language-yaml" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="yaml"><code class="language-yaml"><span class="line"><span style="color:var(--shiki-token-keyword)">proxies</span><span style="color:var(--shiki-token-keyword)">:</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  - </span><span style="color:var(--shiki-token-keyword)">name</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> "tailscale-iface"</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    type</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> direct</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    interface-name</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> utun6</span><span style="color:var(--shiki-token-comment)">   # &lt;--- 必须填写真实的 Tailscale 接口名</span></span></code></pre><button class="copy-code-button">copy</button></div><p>添加 <code translate="no">proxy-group</code></p><div class="code-block"><pre class="shiki highlighting language-yaml" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="yaml"><code class="language-yaml"><span class="line"><span style="color:var(--shiki-token-keyword)">proxy-groups</span><span style="color:var(--shiki-token-keyword)">:</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  - </span><span style="color:var(--shiki-token-keyword)">name</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> Tailscale</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    type</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> select</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    proxies</span><span style="color:var(--shiki-token-keyword)">:</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">      - </span><span style="color:var(--shiki-token-string-expression)">"tailscale-iface"</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">      - </span><span style="color:var(--shiki-token-string-expression)">DIRECT</span></span></code></pre><button class="copy-code-button">copy</button></div><p>在 <code translate="no">rules</code> 顶部添加强制规则</p><div class="code-block"><pre class="shiki highlighting language-yaml" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="yaml"><code class="language-yaml"><span class="line"><span style="color:var(--shiki-token-keyword)">rules</span><span style="color:var(--shiki-token-keyword)">:</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">  # 必须放在最前面 </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  - </span><span style="color:var(--shiki-token-string-expression)">IP-CIDR,100.64.0.0/10,Tailscale,no-resolve</span><span style="color:var(--shiki-foreground)"> </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  - </span><span style="color:var(--shiki-token-string-expression)">DOMAIN-SUFFIX,ts.net,Tailscale</span></span></code></pre><button class="copy-code-button">copy</button></div><p>添加完成后，重载配置理论便可访问了</p><h2 id="步骤二：macOS 配置代理忽略（可选，如果不想走步骤一）" class="markdown-heading" data-heading="步骤二：macOS 配置代理忽略（可选，如果不想走步骤一）" tabindex="-1"><a aria-label="link to this heading" aria-describedby="步骤二：macOS 配置代理忽略（可选，如果不想走步骤一）" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%9AmacOS%20%E9%85%8D%E7%BD%AE%E4%BB%A3%E7%90%86%E5%BF%BD%E7%95%A5%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%8C%E5%A6%82%E6%9E%9C%E4%B8%8D%E6%83%B3%E8%B5%B0%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%89">#</a>步骤二：macOS 配置代理忽略（可选，如果不想走步骤一）</h2><p>解决方法：</p><ol><li><p>打开 <strong>系统设置 -&gt; 网络 -&gt; 代理</strong>。</p></li><li><p>找到 <strong>“忽略这些主机与域名的代理设置”</strong>。</p></li><li><p>添加如下内容：</p></li></ol><div class="code-block"><pre class="shiki highlighting language-plaintext" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="plaintext"><code class="language-plaintext"><span class="line"><span>100.64.0.0/10, ts.net, *.yourdomain</span></span></code></pre><button class="copy-code-button">copy</button></div><h2 id="总结" class="markdown-heading" data-heading="总结" tabindex="-1"><a aria-label="link to this heading" aria-describedby="总结" href="#%E6%80%BB%E7%BB%93">#</a>总结</h2><p>这一套方案比 Socks5 模式更好，通过 <code translate="no">route-exclude</code> 排出内核路由，配合 <code translate="no">interface-name</code> 搞定误入的流量。唯一的缺点就是 macOS 重启后 <code translate="no">utun</code> 顺序可能变。这也是为什么要固定 mihomo 的 utun 名，通常 mihomo 和 tailscale 都是开机自启，如果不固定一个就可以变成两者交替使用一个网卡名称进而导致时不时 Tailscale 的内容无法访问</p><p>路由表如下：</p><div class="code-block"><pre class="shiki highlighting language-bash" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="bash"><code class="language-bash"><span class="line"><span style="color:var(--shiki-token-function)">$/</span><span style="color:var(--shiki-token-string)"> netstat</span><span style="color:var(--shiki-token-string)"> -nr</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-function)">Destination</span><span style="color:var(--shiki-token-string)">        Gateway</span><span style="color:var(--shiki-token-string)">            Flags</span><span style="color:var(--shiki-token-string)">           Netif</span><span style="color:var(--shiki-token-string)"> Expire</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">default</span><span style="color:var(--shiki-token-constant)">            10.1.2.1</span><span style="color:var(--shiki-token-string)">           UGScg</span><span style="color:var(--shiki-token-string)">             en0</span><span style="color:var(--shiki-token-comment)">       # 默认物理网卡出口</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">default</span><span style="color:var(--shiki-token-string)">            link#23</span><span style="color:var(--shiki-token-string)">            UCSIg</span><span style="color:var(--shiki-token-string)">           utun6</span><span style="color:var(--shiki-token-comment)">       # Tailscale 默认路由</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># --- Mihomo 接管了大部分公网流量 (utun233) ---</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">1</span><span style="color:var(--shiki-token-constant)">                  198.18.0.1</span><span style="color:var(--shiki-token-string)">         UGSc</span><span style="color:var(--shiki-token-string)">          utun233</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">2/7</span><span style="color:var(--shiki-token-constant)">                198.18.0.1</span><span style="color:var(--shiki-token-string)">         UGSc</span><span style="color:var(--shiki-token-string)">          utun233</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">4/6</span><span style="color:var(--shiki-token-constant)">                198.18.0.1</span><span style="color:var(--shiki-token-string)">         UGSc</span><span style="color:var(--shiki-token-string)">          utun233</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">...</span><span style="color:var(--shiki-foreground)"> (中间省略部分切片路由) ...</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># --- Tailscale 网段的三明治结构 ---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># 1. [Mihomo] 接管 100.0.0.0/10 (前段)</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">100/10</span><span style="color:var(--shiki-token-constant)">             198.18.0.1</span><span style="color:var(--shiki-token-string)">         UGSc</span><span style="color:var(--shiki-token-string)">          utun233</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># 2. [Tailscale] 独占 100.64.0.0/10 (核心内网段)</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">#    这就是 exclude 配置生效的证明，流量被精确分流到了 utun6</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">100.64/10</span><span style="color:var(--shiki-token-string)">          link#23</span><span style="color:var(--shiki-token-string)">            UCS</span><span style="color:var(--shiki-token-string)">             utun6</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># 3. [Mihomo] 接管 100.128.0.0/9 (后段)</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">100.128/9</span><span style="color:var(--shiki-token-constant)">          198.18.0.1</span><span style="color:var(--shiki-token-string)">         UGSc</span><span style="color:var(--shiki-token-string)">          utun233</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># ----------------------------------------------</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># 其他局域网流量，走物理网卡</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">10.1.2/24</span><span style="color:var(--shiki-token-string)">          link#11</span><span style="color:var(--shiki-token-string)">            UCS</span><span style="color:var(--shiki-token-string)">               en0</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">127.0.0.1</span><span style="color:var(--shiki-token-constant)">          127.0.0.1</span><span style="color:var(--shiki-token-string)">          UH</span><span style="color:var(--shiki-token-string)">                lo0</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">198.18.0.1</span><span style="color:var(--shiki-token-constant)">         198.18.0.1</span><span style="color:var(--shiki-token-string)">         UH</span><span style="color:var(--shiki-token-string)">            utun233</span><span style="color:var(--shiki-token-comment)">       # Mihomo Fake-IP 网关</span></span></code></pre><button class="copy-code-button">copy</button></div></article><noscript><style>.toc-panel nav { display: block; }.toc-toggle { display: none; }.toc-title { display: block; }</style></noscript></div><div class="post-metadata"><p class="post-modified" aria-label="最后更新时间"><span aria-hidden="true">/*</span>最后更新于 <time datetime="2026-09-08T22:55:10.740Z">2026年9月9日</time><span aria-hidden="true">*/</span></p><div class="post-tags"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>
+<circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg><ul class="post-tag-list" aria-label="文章标签列表"><li><a class="post-tag-link" href="/tags/network/">#network</a></li></ul></div><div class="post-meta-row" aria-label="文章分类"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><a class="post-category-link" href="/categories/%E8%AE%B0%E5%BD%95/">记录</a></div><div class="post-meta-row" aria-label="文章统计"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/>
+<path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+<path d="M10 9H8"/>
+<path d="M16 13H8"/>
+<path d="M16 17H8"/></svg><span class="post-word-count" aria-label="字数统计">2110 Words</span></div></div><nav class="post-navigation" aria-label="文章导航"><p class="post-navigation-item"><span class="post-navigation-label" aria-hidden="true">上一篇：</span><a class="post-navigation-link" href="/posts/2025-07-07-为什么 Rust 的 async trait 不是 object-safe 的/" rel="prev" aria-label="上一篇：为什么 Rust 的 async trait 不是 object-safe 的">为什么 Rust 的 async trait 不是 object-safe 的</a></p><p class="post-navigation-item next"><span class="post-navigation-label" aria-hidden="true">下一篇：</span><a class="post-navigation-link" href="/posts/2026-02-13-使用 LLM 改造本博客依赖 Markdown 库/" rel="next" aria-label="下一篇：使用 LLM 改造本博客依赖 Markdown 库">使用 LLM 改造本博客依赖 Markdown 库</a></p></nav><div class="comments" id="comment" aria-label="文章评论" data-astro-cid-nuen6n26><button class="load-comments" type="button" aria-label="加载评论区" data-astro-cid-nuen6n26><span data-astro-cid-nuen6n26>載入評論</span></button></div><script type="module" src="/assets/Comments.astro_astro_type_script_index_0_lang.CxArsHF6.js"></script></main></div><footer data-astro-transition-scope="astro-jregkupr-6" class="site-footer" role="contentinfo" aria-label="网站页脚" data-astro-cid-fn43irff><div class="footer-copy" data-astro-cid-fn43irff><p class="footer-signature" aria-label="个性签名" data-astro-cid-fn43irff>追求火焰的野心者</p><p class="footer-details" aria-label="版权、协议与社交信息" data-astro-cid-fn43irff><span data-astro-cid-fn43irff>&copy; <time data-astro-cid-fn43irff>2026</time><a href="/about/" data-astro-cid-fn43irff>拂若華</a></span><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" aria-label="查看知识共享署名 4.0 协议" rel="license" title="本作品采用 CC BY 4.0 许可" data-astro-cid-fn43irff>CC BY-NC 4.0</a><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="/rss.xml" target="_blank" title="rss" aria-label="订阅本站 RSS 源" type="application/rss+xml" data-astro-cid-fn43irff><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-icon" data-astro-cid-fn43irff><path d="M4 11a9 9 0 0 1 9 9" data-astro-cid-fn43irff></path><path d="M4 4a16 16 0 0 1 16 16" data-astro-cid-fn43irff></path><circle cx="5" cy="19" r="1" data-astro-cid-fn43irff></circle></svg></a><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="https://github.com/tonitrnel" target="_blank" title="github" aria-label="访问作者 GitHub 主页" rel="me noopener noreferrer" data-astro-cid-fn43irff><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-icon" data-astro-cid-fn43irff><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" data-astro-cid-fn43irff></path><path d="M9 18c-4.51 2-5-2-7-2" data-astro-cid-fn43irff></path></svg></a></p></div></footer><!-- build date: 2026-09-10T02:44:17.286Z ᓚᘏᗢ--></body></html><!-- Keep article layout available at first paint, including during development. --><style>
+  .post-opening-with-cover {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr);
+    align-items: center;
+    gap: 3rem;
+    width: min(calc(100vw - 4rem), 54rem);
+    margin-inline: calc((100% - min(calc(100vw - 4rem), 54rem)) / 2);
+    padding-block: 1rem 3rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1rem;
+  }
+  .post-cover {
+    grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
+  }
+  .post-cover-image {
+    display: block;
+    height: 310px;
+    object-fit: cover;
+    width: 100%;
+  }
+  .post-heading {
+    position: relative;
+  }
+  .post-heading-with-cover {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: 1rem;
+  }
+  .post-heading-with-cover .post-published {
+    order: 1;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    opacity: 1;
+    font-weight: 400;
+  }
+  .post-heading-with-cover .md-title {
+    font-size: clamp(2rem, 3.3vw, 2.65rem);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: 0.035em;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    text-wrap: balance;
+  }
+  @media (max-width: 700px) {
+    .post-opening-with-cover {
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+      margin-inline: 0;
+      gap: 2rem;
+      padding-block: 0 2rem;
+    }
+    .post-cover {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .post-cover-image {
+      height: auto;
+      max-height: 260px;
+    }
+    .post-heading-with-cover {
+      padding-block: 0;
+    }
+    .post-heading-with-cover .md-title {
+      font-size: 2rem;
+    }
+  }
+  .post-published {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    opacity: 0.75;
+  }
+  .post-content {
+    margin-top: 2.5rem;
+    width: 100%;
+  }
+  .post-reading {
+    position: relative;
+    display: flow-root;
+  }
+  .post-metadata {
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    opacity: 0.85;
+  }
+  .post-tags,
+  .post-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .post-tags {
+    margin-top: 2rem;
+  }
+  .post-meta-row {
+    margin-block: 1rem;
+  }
+  .post-meta-icon {
+    margin-right: 0.5rem;
+  }
+  .post-tag-list {
+    display: flex;
+    gap: 0.75rem;
+    line-height: 1;
+  }
+  .post-category-link {
+    line-height: 1;
+    text-decoration: none;
+  }
+  .post-tag-link:hover,
+  .post-category-link:hover,
+  .post-navigation-link:hover {
+    text-decoration: underline;
+  }
+  .post-word-count {
+    padding-top: 0.125rem;
+    line-height: 1;
+  }
+  .post-modified {
+    font-style: italic;
+    span {
+      padding: 0 6px;
+    }
+  }
+  .post-navigation {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .post-navigation-item {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+  }
+  .post-navigation-item.next {
+    text-align: right;
+  }
+  .post-navigation-label {
+    opacity: 0.6;
+  }
+  .post-navigation-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+</style><style>
+  .md-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.06em;
+    margin: 0.6rem 0 1.2rem;
+    overflow-wrap: anywhere;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  .md-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 3px;
+    width: 4rem;
+    border-radius: 2px;
+    opacity: 0.8;
+    background: linear-gradient(90deg, var(--secondary) 0%, transparent 85%);
+  }
+</style>

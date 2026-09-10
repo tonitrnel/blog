@@ -1,0 +1,495 @@
+<!DOCTYPE html><html data-astro-transition-scope="astro-yztbsuuz-2" class="theme-light" lang="zh-CN" data-astro-cid-ju4pidww><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#f6f5f0"><link href="/favicon.svg" rel="icon" type="image/svg+xml"><title>Markdown 语法</title><link rel="canonical" href="https://blog.ptdg.dev/posts/2024-05-10-Markdown%20%E8%AF%AD%E6%B3%95/"><meta name="title" content="Markdown 语法"><meta name="description" content="这是一个空白的画卷，我用其为未来制作一丝回忆"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Markdown 语法","description":"这是一个空白的画卷，我用其为未来制作一丝回忆","author":{"@type":"Person","name":"拂若華"},"datePublished":"2024-05-10T02:44:38.000Z","dateModified":"2026-02-16T23:19:10.000Z","keywords":"tag给","articleSection":"笔记","wordCount":2794}</script><meta property="og:title" content="Markdown 语法"><meta property="og:description" content="这是一个空白的画卷，我用其为未来制作一丝回忆"><meta property="og:url" content="https://blog.ptdg.dev/posts/2024-05-10-Markdown%20%E8%AF%AD%E6%B3%95/"><meta property="og:type" content="article"><meta property="article:author" content="拂若華"><meta property="article:published_time" content="2024-05-10T02:44:38.000Z"><script>
+  (function () {
+    function applyTheme() {
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const storageTheme = sessionStorage.getItem('theme');
+      const isDark = storageTheme === 'dark' || (!storageTheme && isSystemDark);
+      const themeColor = document.head.children.namedItem('theme-color');
+      if (isDark) {
+        document.documentElement.classList.remove('theme-light');
+        document.documentElement.classList.add('theme-dark');
+        if (themeColor) themeColor.content = '#1b1b19';
+      } else {
+        document.documentElement.classList.remove('theme-dark');
+        document.documentElement.classList.add('theme-light');
+        if (themeColor) themeColor.content = '#f6f5f0';
+      }
+    }
+    applyTheme();
+    document.addEventListener('astro:after-swap', applyTheme);
+  })();
+</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/assets/ClientRouter.astro_astro_type_script_index_0_lang.Ckbx0Etl.js"></script><script type="module" src="/assets/Layout.astro_astro_type_script_index_0_lang.CHzLsb3o.js"></script><link rel="stylesheet" href="/assets/Renderer.BPQMiJuM.css"><link rel="stylesheet" href="/assets/Helmet.BYnb6_pI.css"><link rel="stylesheet" href="/assets/_slug_.BhOkEj1n.css"><style>[data-astro-transition-scope="astro-2uohob67-1"] { view-transition-name: post-title-41bcbcd2c4f447be; }@layer astro { ::view-transition-old(post-title-41bcbcd2c4f447be) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(post-title-41bcbcd2c4f447be) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(post-title-41bcbcd2c4f447be) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(post-title-41bcbcd2c4f447be) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-yztbsuuz-2"] { view-transition-name: site-root; }@layer astro { ::view-transition-old(site-root) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(site-root) { animation: none; mix-blend-mode: normal; }::view-transition-group(site-root) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-yztbsuuz-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-yztbsuuz-2"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-yztbsuuz-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-yztbsuuz-2"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-jgduxsen-3"] { view-transition-name: page-content; }@layer astro { ::view-transition-old(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-out; }::view-transition-new(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-in; }[data-astro-transition=back]::view-transition-old(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-out; }[data-astro-transition=back]::view-transition-new(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-in; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-out; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-in; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-out; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-in; }</style><style>[data-astro-transition-scope="astro-f4pvgsiq-4"] { view-transition-name: feather-background; }@layer astro { ::view-transition-old(feather-background) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(feather-background) { animation: none; mix-blend-mode: normal; }::view-transition-group(feather-background) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-f4pvgsiq-4"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-f4pvgsiq-4"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-f4pvgsiq-4"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-f4pvgsiq-4"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-pcq43t4g-5"] { view-transition-name: site-header; }@layer astro { ::view-transition-old(site-header) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(site-header) { animation: none; mix-blend-mode: normal; }::view-transition-group(site-header) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-pcq43t4g-5"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-pcq43t4g-5"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-pcq43t4g-5"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-pcq43t4g-5"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-jregkupr-6"] { view-transition-name: site-footer; }@layer astro { ::view-transition-old(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head><body data-astro-cid-ju4pidww><raven-background class="feather-background" aria-hidden="true" data-astro-transition-scope="astro-f4pvgsiq-4" data-astro-transition-persist="feather-background" data-astro-cid-qz57aosd="true"><svg class="snow snow-right" viewBox="0 0 160 300" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#snow-right" data-astro-cid-qz57aosd></use></svg><svg class="snow snow-left" viewBox="0 0 100 180" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#snow-left" data-astro-cid-qz57aosd></use></svg><div class="feather-lane drifting-lane" data-astro-cid-qz57aosd><svg class="feather drifting" viewBox="0 0 120 320" fill="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#feather" data-astro-cid-qz57aosd></use></svg></div><div class="feather-lane fragment-lane" data-astro-cid-qz57aosd><svg class="feather fragment" viewBox="0 0 120 320" fill="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#feather" data-astro-cid-qz57aosd></use></svg></div></raven-background><!-- Initialize before the first paint instead of waiting for the shared module. --><script>
+  (() => {
+    if (customElements.get('raven-background')) return;
+    // Native page loads must reuse the same arrangement as client navigation.
+    let seed = 1;
+    try {
+      const saved = Number(sessionStorage.getItem('feather-seed'));
+      seed = Number.isInteger(saved) && saved > 0 && saved < 2147483647
+        ? saved : Math.floor(Math.random() * 2147483646) + 1;
+      sessionStorage.setItem('feather-seed', String(seed));
+    } catch {
+      // A fixed seed keeps the background stable when storage is unavailable.
+      seed = 1;
+    }
+    const random = () => {
+      seed = seed * 16807 % 2147483647;
+      return (seed - 1) / 2147483646;
+    };
+    const arrangements = [0, 1].map((index) => ({
+      top: `${(index ? 60 : 15) + random() * (index ? 17 : 25)}%`,
+      angle: `${(index ? 35 : -28) + random() * 45 + (random() < .35 ? 180 : 0)}deg`,
+      scale: String((index ? .35 : .8) + random() * .18),
+      inset: `${-.5 + random()}rem`,
+      shape: ['full', 'slender', 'swept'][Math.floor(random() * 3)],
+    }));
+    customElements.define('raven-background', class extends HTMLElement {
+      connectedCallback() {
+        this.querySelectorAll('.feather').forEach((feather, index) => {
+          const arrangement = arrangements[index];
+          if (!arrangement) return;
+          for (const key of ['top', 'angle', 'scale', 'inset']) {
+            feather.style.setProperty(`--${key}`, arrangement[key]);
+          }
+          feather.dataset.shape = arrangement.shape;
+        });
+      }
+    });
+  })();
+</script><header data-astro-transition-scope="astro-pcq43t4g-5" class="header" role="banner" aria-label="网站页头"><div class="header-inner"><h1 class="header-title" aria-label="网站标题"><a href="/" class="site-brand" aria-label="返回首页"><svg class="brand-raven" viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><!-- A perched corvid, with a heavy bill and etched wing feathers. --><path d="M29 167 62 117C72 103 89 95 105 79L124 48C132 33 153 30 167 39L178 51 208 65 176 69C172 93 169 116 149 134L113 151 55 174 68 153Z" fill="currentColor"></path><path d="M111 89C91 110 80 130 64 153M123 92C109 113 96 132 80 145M134 94C124 114 113 130 99 139M145 94C140 111 133 124 121 131" stroke="var(--paper)" stroke-width="1.3" opacity=".48"></path><path d="m131 139 2 30 15 7m-15-7-10 7m25-40 8 31 15 6m-15-6-7 9" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="161" cy="52" r="2.5" fill="var(--paper)"></circle><path d="m180 60 19 5" stroke="var(--paper)" stroke-width="1" opacity=".6"></path><path d="M17 178c64-5 132 4 208-2" stroke="currentColor" stroke-width="1.2"></path></svg>繪畫世界</a></h1><nav class="nav-menu header-nav" aria-label="主导航菜单" role="navigation" data-astro-cid-xr2ojvak><ul class="nav-menu-list" aria-label="主导航菜单列表" role="list" data-astro-cid-xr2ojvak><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/posts/" class="nav-link is-active" itemprop="url" aria-current="page" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>文章</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/categories/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>分類</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/tags/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>標籤</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/projects/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>項目</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/about/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>關於</a></li></ul></nav><a class="icon-control header-action" href="/search/" aria-label="网站搜索" role="button" title="打开搜索"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><path d="m21 21-4.34-4.34"/>
+<circle cx="11" cy="11" r="8"/></svg></a><theme-control class="icon-control header-action" role="button" aria-label="切换主题配色" title="切换深色/浅色模式"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><circle cx="12" cy="12" r="4"/>
+<path d="M12 2v2"/>
+<path d="M12 20v2"/>
+<path d="m4.93 4.93 1.41 1.41"/>
+<path d="m17.66 17.66 1.41 1.41"/>
+<path d="M2 12h2"/>
+<path d="M20 12h2"/>
+<path d="m6.34 17.66-1.41 1.41"/>
+<path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></theme-control><mobile-nav class="mobile-nav" aria-label="移动导航"><button type="button" id="nav-menu-toggle" aria-label="打开导航菜单" aria-expanded="false" aria-controls="mobile-nav-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path class="menu-lines" d="M4 6h16M4 12h16M4 18h16"></path><path class="menu-close" d="m6 6 12 12M6 18 18 6"></path></svg></button><nav id="mobile-nav-menu" aria-label="移动导航菜单" hidden><ul class="mobile-nav-list"><li class="mobile-nav-item"><a href="/posts/" class="nav-link is-active" itemprop="url" aria-current="page" data-astro-cid-hwj3apfd>文章</a></li><li class="mobile-nav-item"><a href="/categories/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>分類</a></li><li class="mobile-nav-item"><a href="/tags/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>標籤</a></li><li class="mobile-nav-item"><a href="/projects/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>項目</a></li><li class="mobile-nav-item"><a href="/about/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>關於</a></li></ul></nav></mobile-nav></div></header><div data-astro-transition-scope="astro-jgduxsen-3" data-astro-cid-ju4pidww><main class="container post-page" role="main" aria-label="文章正文"><div class="post-opening post-opening-with-cover"><div class="post-cover" aria-label="文章封面图"><figure class="markdown-image" data-lightbox="false" data-astro-cid-xmycpchf><img src="https://interactive-examples.mdn.mozilla.net/media/examples/plumeria.jpg" alt="https://interactive-examples.mdn.mozilla.net/media/examples/plumeria.jpg" class="post-cover-image" loading="eager" decoding="async" fetchpriority="high"></figure></div><header class="post-heading post-heading-with-cover"><time class="post-published" datetime="2024-05-10T02:44:38.000Z" aria-label="发布日期">2024年5月10日</time><h1 class="md-title" aria-label="文章标题"><span data-astro-transition-scope="astro-2uohob67-1" class="transition-title">Markdown 语法</span></h1></header></div><div class="post-reading"><post-toc><aside class="toc-sidebar" aria-label="文章目录"><div class="toc-panel"><span class="toc-title">本文目录</span><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="post-toc-links"><span>本文目录</span><span class="toc-chevron" aria-hidden="true">⌄</span></button><nav id="post-toc-links" aria-label="文章标题导航"><ol><li><a href="#%E5%9D%97%20Block" style="--depth: 0">块 Block</a></li><li><a href="#%E5%89%8D%E8%A8%80%20Frontmatter" style="--depth: 0">前言 Frontmatter</a></li><li><a href="#%E5%86%85%E9%83%A8%E9%93%BE%E6%8E%A5%20InternalLink" style="--depth: 0">内部链接 InternalLink</a></li><li><a href="#%E5%86%85%E9%83%A8%E5%B5%8C%E5%85%A5%20Embeds" style="--depth: 0">内部嵌入 Embeds</a></li><li><a href="#%E6%A0%87%E9%A2%98%20Heading" style="--depth: 0">标题 Heading</a></li><li><a href="#%E9%87%8D%E7%82%B9%20Emphasis" style="--depth: 0">重点 Emphasis</a></li><li><a href="#%E5%88%97%E8%A1%A8%20Lists" style="--depth: 0">列表 Lists</a></li><li><a href="#%E5%9B%BE%E5%83%8F%20Images" style="--depth: 0">图像 Images</a></li><li><a href="#%E9%93%BE%E6%8E%A5%20Links" style="--depth: 0">链接 Links</a></li><li><a href="#%E5%9D%97%E5%BC%95%E7%94%A8%20Blockquotes" style="--depth: 0">块引用 Blockquotes</a></li><li><a href="#%E4%BB%A3%E7%A0%81%20Code" style="--depth: 0">代码 Code</a></li><li><a href="#%E4%BB%BB%E5%8A%A1%E5%88%97%E8%A1%A8%20Task%20list" style="--depth: 0">任务列表 Task list</a></li><li><a href="#%E5%AE%9A%E4%B9%89%E5%88%97%E8%A1%A8%20Definition%20Lists%20%5BUnsupportted%5D" style="--depth: 0">定义列表 Definition Lists [Unsupportted]</a></li><li><a href="#%E8%A1%A8%E6%A0%BC%20Tables" style="--depth: 0">表格 Tables</a></li><li><a href="#%E5%88%A0%E9%99%A4%E7%BA%BF%20Strikethrough" style="--depth: 0">删除线 Strikethrough</a></li><li><a href="#%E9%AB%98%E4%BA%AE%20Highlighting" style="--depth: 0">高亮 Highlighting</a></li><li><a href="#%E6%B0%B4%E5%B9%B3%E7%BA%BF%20Horizontal%20Bar" style="--depth: 0">水平线 Horizontal Bar</a></li><li><a href="#%E8%84%9A%E6%B3%A8%20Fontnotes" style="--depth: 0">脚注 Fontnotes</a></li><li><a href="#%E6%95%B0%E5%AD%A6%20Math" style="--depth: 0">数学 Math</a></li><li><a href="#%E6%B3%A8%E9%87%8A%20Comments" style="--depth: 0">注释 Comments</a></li><li><a href="#%E6%A0%87%E6%B3%A8%20Callouts" style="--depth: 0">标注 Callouts</a></li><li><a href="#Basics" style="--depth: 0">Basics</a></li><li><a href="#Extras" style="--depth: 0">Extras</a></li></ol></nav></div></aside></post-toc><article class="md-content post-content" aria-label="文章内容"><h3 id="块 Block" class="markdown-heading" data-heading="块 Block" tabindex="-1"><a aria-label="link to this heading" aria-describedby="块 Block" href="#%E5%9D%97%20Block">#</a>块 Block</h3><p>使用             两次回车新建一个块，即两个<code translate="no">\n</code>换行符</p><h3 id="前言 Frontmatter" class="markdown-heading" data-heading="前言 Frontmatter" tabindex="-1"><a aria-label="link to this heading" aria-describedby="前言 Frontmatter" href="#%E5%89%8D%E8%A8%80%20Frontmatter">#</a>前言 Frontmatter</h3><p>一个位于文件头，可选的，以 Yaml 为语法记录元数据的方式</p><div class="code-block"><pre class="shiki highlighting language-plaintext" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="plaintext"><code class="language-plaintext"><span class="line"><span>4442</span></span>
+<span class="line"><span>55476</span></span>
+<span class="line"><span>22</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="内部链接 InternalLink" class="markdown-heading" data-heading="内部链接 InternalLink" tabindex="-1"><a aria-label="link to this heading" aria-describedby="内部链接 InternalLink" href="#%E5%86%85%E9%83%A8%E9%93%BE%E6%8E%A5%20InternalLink">#</a>内部链接 InternalLink</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">链接到文件</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">Link to a page: [[Internal Links]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">使用 # 链接到笔记中的标题</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">Link to a page: [[Internal Links#Heading 2]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">使用 #^ 链接到笔记中的块</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">Link to a page: [[Windows 下 CLion 开发 Rust 的 Debugger 配置#^9b8041]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">使用 | 显示自定义文本</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">Link to a page: [[Internal Links|custom display text]]</span></span></code></pre><button class="copy-code-button">copy</button></div><p id="block-365d428">此链接无需输入路径，将自动匹配资源库下的内容
+此处块部分语法是：<code translate="no">^9b8041</code>，包含上面的一个段落，<code translate="no">9b8041</code>是段落 ID，一般由 Obsidian 生成，解析时需要考虑</p><p>查看：<a href="https://help.obsidian.md/Linking+notes+and+files/Internal+links" rel="noonpener" class="external-link" target="_blank">Internal Links</a></p><h3 id="内部嵌入 Embeds" class="markdown-heading" data-heading="内部嵌入 Embeds" tabindex="-1"><a aria-label="link to this heading" aria-describedby="内部嵌入 Embeds" href="#%E5%86%85%E9%83%A8%E5%B5%8C%E5%85%A5%20Embeds">#</a>内部嵌入 Embeds</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">嵌入笔记</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![[Internal links]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">使用 # 嵌入笔记的标题部分</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![[Internal links#Heading 2]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">使用 #^ 嵌入笔记的块部分</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![[Internal links#^365d428]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">嵌入图像文件</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![[</span><span style="color:var(--shiki-token-keyword)">exmaple.jpg</span><span style="color:var(--shiki-foreground)">]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">使用 | 指定嵌入图像的宽高</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![[</span><span style="color:var(--shiki-token-keyword)">exmaple.jpg|200</span><span style="color:var(--shiki-foreground)">]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![[</span><span style="color:var(--shiki-token-keyword)">exmaple.jpg|200x200</span><span style="color:var(--shiki-foreground)">]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">(考虑实现) 指定嵌入图像的属性</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![[</span><span style="color:var(--shiki-token-keyword)">exmaple.jpg#width=200&amp;height=300&amp;fit=cover</span><span style="color:var(--shiki-foreground)">]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">嵌入音频文件</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![[</span><span style="color:var(--shiki-token-keyword)">川井宪次-_かわい-けんじ_-孤独な巡礼-_孤独的巡礼_.mp3</span><span style="color:var(--shiki-foreground)">]]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">嵌入PDF文件并指定页码</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![[</span><span style="color:var(--shiki-token-keyword)">document.pdf#page=3</span><span style="color:var(--shiki-foreground)">]]</span></span></code></pre><button class="copy-code-button">copy</button></div><p>查看：<a href="https://help.obsidian.md/Linking+notes+and+files/Embedding+files" rel="noonpener" class="external-link" target="_blank">Embedding Files</a></p><h3 id="标题 Heading" class="markdown-heading" data-heading="标题 Heading" tabindex="-1"><a aria-label="link to this heading" aria-describedby="标题 Heading" href="#%E6%A0%87%E9%A2%98%20Heading">#</a>标题 Heading</h3><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground);font-weight:bold"># This is a heading 1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">also use the alternative</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">This is a Heading 1</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">===</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">## This is a heading 2</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">This is a Heading 2</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">---</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">### This is a heading 3</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">#### This is a heading 4</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">##### This is a heading 5</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">###### This is a heading 6</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground);font-weight:bold"># This is a heading 1</span></span></code></pre><button class="copy-code-button">copy</button></div><p>also use the alternative</p><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground)">This is a Heading 1</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">===</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">## This is a heading 2</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground)">This is a Heading 2</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">---</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">### This is a heading 3</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">#### This is a heading 4</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">##### This is a heading 5</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">###### This is a heading 6</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="重点 Emphasis" class="markdown-heading" data-heading="重点 Emphasis" tabindex="-1"><a aria-label="link to this heading" aria-describedby="重点 Emphasis" href="#%E9%87%8D%E7%82%B9%20Emphasis">#</a>重点 Emphasis</h3><p>italic</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground);font-style:italic">*This text will be italic*</span></span>
+<span class="line"><span style="color:var(--shiki-foreground);font-style:italic">_This will also be italic_</span></span></code></pre><button class="copy-code-button">copy</button></div><p><em>This text will be italic</em>
+<em>This will also be italic</em></p><p>bold</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">**This text will be bold**</span></span>
+<span class="line"><span style="color:var(--shiki-foreground);font-weight:bold">__This will also be bold__</span></span></code></pre><button class="copy-code-button">copy</button></div><p><strong>This text will be bold</strong>
+<strong>This will also be bold</strong></p><p>combine them</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground);font-style:italic">_You </span><span style="color:var(--shiki-foreground);font-weight:bold">**can**</span><span style="color:var(--shiki-foreground);font-style:italic"> combine them_</span></span></code></pre><button class="copy-code-button">copy</button></div><p><em>You <strong>can</strong> combine them</em></p><h3 id="列表 Lists" class="markdown-heading" data-heading="列表 Lists" tabindex="-1"><a aria-label="link to this heading" aria-describedby="列表 Lists" href="#%E5%88%97%E8%A1%A8%20Lists">#</a>列表 Lists</h3><p>Unnumbered lists</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">- Item 1</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">- Item 2</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">	- Item 2a</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">	- Item 2b</span></span></code></pre><button class="copy-code-button">copy</button></div><ul class="has-list-bullet"><li>Item 1</li><li>Item 2<ul class="has-list-bullet"><li>Item 2a</li><li>Item 2b</li></ul></li></ul><p>Numbered lists</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">1. Item 1</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">2. Item 2</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">3. Item 3</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">	1. Item 3a</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">	2. Item 3b</span></span></code></pre><button class="copy-code-button">copy</button></div><ol><li>Item 1</li><li>Item 2</li><li>Item 3<ol><li>Item 3a</li><li>Item 3b</li></ol></li></ol><h3 id="图像 Images" class="markdown-heading" data-heading="图像 Images" tabindex="-1"><a aria-label="link to this heading" aria-describedby="图像 Images" href="#%E5%9B%BE%E5%83%8F%20Images">#</a>图像 Images</h3><div class="code-block"><pre class="shiki highlighting language-md" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="md"><code class="language-md"><span class="line"><span style="color:var(--shiki-foreground)">![</span><span style="color:var(--shiki-token-keyword)">grapefruit</span><span style="color:var(--shiki-foreground)">]</span><span style="color:var(--shiki-token-link)">(https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg)</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">使用 | 指定图像的大小</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">![</span><span style="color:var(--shiki-token-keyword)">grapefruit|100</span><span style="color:var(--shiki-foreground)">]</span><span style="color:var(--shiki-token-link)">(https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg)</span></span></code></pre><button class="copy-code-button">copy</button></div><p></p><figure class="markdown-image" data-lightbox="true" data-astro-cid-xmycpchf=""><a href="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg" target="_blank" rel="noopener noreferrer"><img src="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg" alt="grapefruit" loading="lazy" decoding="async" fetchpriority="auto"></a></figure><p></p><p></p><figure class="markdown-image" data-lightbox="true" data-astro-cid-xmycpchf=""><a href="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg" target="_blank" rel="noopener noreferrer"><img src="https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg" alt="grapefruit" loading="lazy" decoding="async" fetchpriority="auto"></a></figure><p></p><h3 id="链接 Links" class="markdown-heading" data-heading="链接 Links" tabindex="-1"><a aria-label="link to this heading" aria-describedby="链接 Links" href="#%E9%93%BE%E6%8E%A5%20Links">#</a>链接 Links</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-token-link);text-decoration:underline">[</span><span style="color:var(--shiki-token-keyword);text-decoration:underline">Mozilla Developer Network</span><span style="color:var(--shiki-token-link);text-decoration:underline">](https://developer.mozilla.org/en-US/)</span></span></code></pre><button class="copy-code-button">copy</button></div><p><a href="https://developer.mozilla.org/en-US/" rel="noonpener" class="external-link" target="_blank">Mozilla Developer Network</a></p><p>如果未给定协议，则进行本地匹配，支持：<code translate="no">https?</code>、<code translate="no">obsidian</code> 等</p><p>链接地址中的空格等敏感字符需要转义，或者使用下面的语法</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-token-link);text-decoration:underline">[</span><span style="color:var(--shiki-token-keyword);text-decoration:underline">Slides Demo</span><span style="color:var(--shiki-token-link);text-decoration:underline">](&lt;Slides Demo&gt;)</span></span></code></pre><button class="copy-code-button">copy</button></div><p><a href="Slides%20Demo" rel="noonpener" class="link" target="_blank">Slides Demo</a></p><h3 id="块引用 Blockquotes" class="markdown-heading" data-heading="块引用 Blockquotes" tabindex="-1"><a aria-label="link to this heading" aria-describedby="块引用 Blockquotes" href="#%E5%9D%97%E5%BC%95%E7%94%A8%20Blockquotes">#</a>块引用 Blockquotes</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">&gt; 无人爱苦，亦无人寻之欲之，乃因其苦...</span></span></code></pre><button class="copy-code-button">copy</button></div><blockquote><p>无人爱苦，亦无人寻之欲之，乃因其苦…</p></blockquote><h3 id="代码 Code" class="markdown-heading" data-heading="代码 Code" tabindex="-1"><a aria-label="link to this heading" aria-describedby="代码 Code" href="#%E4%BB%A3%E7%A0%81%20Code">#</a>代码 Code</h3><p>Inline code</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">Text inside </span><span style="color:var(--shiki-token-string)">`backticks`</span><span style="color:var(--shiki-foreground)"> on a line will be formatted like code.</span></span></code></pre><button class="copy-code-button">copy</button></div><p>Text inside <code translate="no">backticks</code> on a line will be formatted like code.</p><p>Code blocks</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-token-string)">```rust</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> main</span><span style="color:var(--shiki-foreground)">(){</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">	pritntf!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"Hello World"</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"><span style="color:var(--shiki-token-string)">```</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> main</span><span style="color:var(--shiki-foreground)">(){</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">	pritntf!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"Hello World"</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><p>Escape code block</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-token-string)">~~~rust</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> main</span><span style="color:var(--shiki-foreground)">(){</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">	pritntf!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"Hello World"</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"><span style="color:var(--shiki-token-string)">~~~</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> main</span><span style="color:var(--shiki-foreground)">(){</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">	pritntf!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"Hello World"</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><p>Escape inline code</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">single backtick: </span><span style="color:var(--shiki-token-string)">`` ` ``</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">triple ticks: </span><span style="color:var(--shiki-token-string)">`` ``` ``</span></span></code></pre><button class="copy-code-button">copy</button></div><p>single backtick: <code translate="no">`</code>
+triple ticks: <code translate="no">```</code></p><h3 id="任务列表 Task list" class="markdown-heading" data-heading="任务列表 Task list" tabindex="-1"><a aria-label="link to this heading" aria-describedby="任务列表 Task list" href="#%E4%BB%BB%E5%8A%A1%E5%88%97%E8%A1%A8%20Task%20list">#</a>任务列表 Task list</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">- [</span><span style="color:var(--shiki-token-keyword)">x</span><span style="color:var(--shiki-foreground)">] #tags, </span><span style="color:var(--shiki-token-link);text-decoration:underline">[</span><span style="color:var(--shiki-token-keyword);text-decoration:underline">links</span><span style="color:var(--shiki-token-link);text-decoration:underline">]()</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-foreground);font-weight:bold">**formatting**</span><span style="color:var(--shiki-foreground)"> supported</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">- [</span><span style="color:var(--shiki-token-keyword)">x</span><span style="color:var(--shiki-foreground)">] list syntax required (any unordered or ordered list supported)</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">- [</span><span style="color:var(--shiki-token-keyword)">x</span><span style="color:var(--shiki-foreground)">] this is a complete item</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">- [</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)">] this is also a complete item (works with every character)</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">- [ ] this is an incomplete item</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">- [ ] tasks can be clicked in Preview to be checked off</span></span></code></pre><button class="copy-code-button">copy</button></div><ul class="contains-task-list has-list-bullet"><link rel="stylesheet" href="/assets/TaskItem.CgQmzjXL.css"><li data-task="x" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked=""><a href="/tags/tag给" class="tag" target="_blank" rel="noopener">#tag给</a>, <a href="" rel="noonpener" class="link" target="_blank">links</a>, <strong>formatting</strong> supported</li><li data-task="x" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">list syntax required (any unordered or ordered list supported)</li><li data-task="x" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">this is a complete item</li><li data-task="?" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">this is also a complete item (works with every character)</li><li data-task="" class="task-list-item"><input type="checkbox" disabled="" class="task-list-item-checkbox">this is an incomplete item</li><li data-task="" class="task-list-item"><input type="checkbox" disabled="" class="task-list-item-checkbox">tasks can be clicked in Preview to be checked off</li></ul><h3 id="定义列表 Definition Lists [Unsupportted]" class="markdown-heading" data-heading="定义列表 Definition Lists [Unsupportted]" tabindex="-1"><a aria-label="link to this heading" aria-describedby="定义列表 Definition Lists [Unsupportted]" href="#%E5%AE%9A%E4%B9%89%E5%88%97%E8%A1%A8%20Definition%20Lists%20%5BUnsupportted%5D">#</a>定义列表 Definition Lists [Unsupportted]</h3><p>注：Obsidian 不支持 CFM 不支持</p><p>First Term
+: This is the definition of the first term</p><p>Second Term
+: This</p><h3 id="表格 Tables" class="markdown-heading" data-heading="表格 Tables" tabindex="-1"><a aria-label="link to this heading" aria-describedby="表格 Tables" href="#%E8%A1%A8%E6%A0%BC%20Tables">#</a>表格 Tables</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">|First Header | Second Header|</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">|</span><span style="color:var(--shiki-token-punctuation)">------------</span><span style="color:var(--shiki-foreground)"> | </span><span style="color:var(--shiki-token-punctuation)">------------</span><span style="color:var(--shiki-foreground)">|</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">|Content from cell 1 | Content from cell 2|</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">|Content in the first column | Content in the second column|</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="table-wrapper"><table><thead><tr><th align="left">First Header</th><th align="left">Second Header</th></tr></thead><tbody><tr><td align="left">Content from cell 1</td><td align="left">Content from cell 2</td></tr><tr><td align="left">Content in the first column</td><td align="left">Content in the second column</td></tr></tbody></table></div><p>The vertical bars at the start and end of a line are optional.</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">First Header | Second Header</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">------------ | ------------</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">Content from cell 1 | Content from cell 2</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">Content in the first column | Content in the second column</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="table-wrapper"><table><thead><tr><th align="left">First Header</th><th align="left">Second Header</th></tr></thead><tbody><tr><td align="left">Content from cell 1</td><td align="left">Content from cell 2</td></tr><tr><td align="left">Content in the first column</td><td align="left">Content in the second column</td></tr></tbody></table></div><p>Tables can be justified with a colon</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">First Header  | Second Header | Third Header</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">:------------ | ------------: | :------------:</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">Content from cell 1 | Content from cell 2 | Content from cell 3</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">Content in the first column | Content in the second column | Content in the third column</span></span></code></pre><button class="copy-code-button">copy</button></div><div class="table-wrapper"><table><thead><tr><th align="left">First Header</th><th align="right">Second Header</th><th align="center">Third Header</th></tr></thead><tbody><tr><td align="left">Content from cell 1</td><td align="right">Content from cell 2</td><td align="center">Content from cell 3</td></tr><tr><td align="left">Content in the first column</td><td align="right">Content in the second column</td><td align="center">Content in the third column</td></tr></tbody></table></div><h3 id="删除线 Strikethrough" class="markdown-heading" data-heading="删除线 Strikethrough" tabindex="-1"><a aria-label="link to this heading" aria-describedby="删除线 Strikethrough" href="#%E5%88%A0%E9%99%A4%E7%BA%BF%20Strikethrough">#</a>删除线 Strikethrough</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">Any word wrapped with two tildes (like ~~this~~) will appear crossed out.</span></span></code></pre><button class="copy-code-button">copy</button></div><p>Any word wrapped with two tildes (like <del>this</del>) will appear crossed out.</p><h3 id="高亮 Highlighting" class="markdown-heading" data-heading="高亮 Highlighting" tabindex="-1"><a aria-label="link to this heading" aria-describedby="高亮 Highlighting" href="#%E9%AB%98%E4%BA%AE%20Highlighting">#</a>高亮 Highlighting</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">Use two equal signs to ==highlight text==.</span></span></code></pre><button class="copy-code-button">copy</button></div><p>Use two equal signs to <mark>highlight text</mark>.</p><h3 id="水平线 Horizontal Bar" class="markdown-heading" data-heading="水平线 Horizontal Bar" tabindex="-1"><a aria-label="link to this heading" aria-describedby="水平线 Horizontal Bar" href="#%E6%B0%B4%E5%B9%B3%E7%BA%BF%20Horizontal%20Bar">#</a>水平线 Horizontal Bar</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">Use three stars ***, hyphens ---, or underscores ___ in a new line to produce an horizontal bar.</span></span></code></pre><button class="copy-code-button">copy</button></div><p>Use three stars ***, hyphens</p><hr><p>, or underscores</p><hr><p>in a new line to produce an horizontal bar.</p><hr><h3 id="脚注 Fontnotes" class="markdown-heading" data-heading="脚注 Fontnotes" tabindex="-1"><a aria-label="link to this heading" aria-describedby="脚注 Fontnotes" href="#%E8%84%9A%E6%B3%A8%20Fontnotes">#</a>脚注 Fontnotes</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">Here's a simple footnote,[</span><span style="color:var(--shiki-token-keyword)">^1</span><span style="color:var(--shiki-foreground)">] and here's a longer one.[</span><span style="color:var(--shiki-token-keyword)">^bignote</span><span style="color:var(--shiki-foreground)">]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">[^1]</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-link)"> meaningful!</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">[</span><span style="color:var(--shiki-token-keyword)">^bignote</span><span style="color:var(--shiki-foreground)">]: Here's one with multiple paragraphs and code.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    Indent paragraphs to include them in the footnote.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-string)">    `{ my code }`</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    Add as many paragraphs as you like.</span></span></code></pre><button class="copy-code-button">copy</button></div><p>Here’s a simple footnote,<sup data-footnote-id="fnref-1" class="footnote-ref" id="fnref-1"><a href="#fn-1" class="footnote-link">[1]</a></sup> and here’s a longer one.<sup data-footnote-id="fnref-bignote" class="footnote-ref" id="fnref-bignote"><a href="#fn-bignote" class="footnote-link">[2]</a></sup></p><div class="code-block"><pre class="shiki highlighting language-plaintext" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="plaintext"><code class="language-plaintext"><span class="line"><span>Indent paragraphs to include them in the footnote.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>`{ my code }`</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Add as many paragraphs as you like.</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="数学 Math" class="markdown-heading" data-heading="数学 Math" tabindex="-1"><a aria-label="link to this heading" aria-describedby="数学 Math" href="#%E6%95%B0%E5%AD%A6%20Math">#</a>数学 Math</h3><p>Block</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">$$\begin{vmatrix}a &amp; b\\</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">c &amp; d</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">\end{vmatrix}=ad-bc$$</span></span></code></pre><button class="copy-code-button">copy</button></div><span class="math math-block"><mjx-container class="MathJax" jax="SVG" overflow="overflow"><svg style="vertical-align: -2.267ex;" xmlns="http://www.w3.org/2000/svg" width="6.143ex" height="5.665ex" role="img" focusable="false" viewBox="0 -1502 2715 2504" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math" data-latex="\begin{vmatrix}a &amp; b\\
+c &amp; d
+\end{vmatrix}=ad-bc"><g data-mml-node="mrow" data-latex="{vmatrix}"><g data-mml-node="mo"><use data-c="2223" xlink:href="#MJX-2-NCM-S5-2223"></use></g><g data-mml-node="mtable" transform="translate(333,0)"><g data-mml-node="mtr" transform="translate(0,700)"><g data-mml-node="mtd"><g data-mml-node="mi" data-latex="a"><use data-c="1D44E" xlink:href="#MJX-2-NCM-I-1D44E"></use></g></g><g data-mml-node="mtd" transform="translate(1574.5,0)"><g data-mml-node="mi" data-latex="b"><use data-c="1D44F" xlink:href="#MJX-2-NCM-I-1D44F"></use></g></g></g><g data-mml-node="mtr" transform="translate(0,-700)"><g data-mml-node="mtd" transform="translate(48,0)"><g data-mml-node="mi" data-latex="c"><use data-c="1D450" xlink:href="#MJX-2-NCM-I-1D450"></use></g></g><g data-mml-node="mtd" transform="translate(1529,0)"><g data-mml-node="mi" data-latex="d"><use data-c="1D451" xlink:href="#MJX-2-NCM-I-1D451"></use></g></g></g></g><g data-mml-node="mo" transform="translate(2382,0)"><use data-c="2223" xlink:href="#MJX-2-NCM-S5-2223"></use></g></g></g></g><defs><path id="MJX-2-NCM-S5-2223" d="M145-965C145-981 145-1002 166-1002C188-1002 189-982 189-965L189 1465C189 1481 188 1502 167 1502C145 1502 145 1482 145 1465Z"></path><path id="MJX-2-NCM-I-1D44E" d="M498 144C498 153 493 158 482 158C474 158 468 151 465 137C445 58 421 18 394 18C377 18 368 32 368 60C368 73 372 97 381 132L438 357C443 376 445 387 445 392C445 412 434 422 412 422C391 422 377 410 370 387C349 424 319 442 281 442C216 442 159 409 109 343C63 281 40 217 40 150C40 63 91-11 175-11C218-11 260 12 300 58C311 20 345-11 392-11C461-11 482 70 498 144M341 374C350 353 355 339 355 330C355 326 354 321 353 314L304 122C301 111 294 99 285 87C248 41 212 18 177 18C138 18 118 48 118 107C118 131 124 167 136 215C157 300 187 357 224 388C244 405 263 413 282 413C309 413 329 400 341 374Z"></path><path id="MJX-2-NCM-I-1D44F" d="M281 445C245 445 209 428 174 394L243 679C241 688 238 694 226 694C193 694 120 685 107 684C92 682 84 675 84 660C84 650 93 645 112 645C131 645 157 646 157 632C157 628 152 608 143 571L63 249C52 207 47 173 47 148C47 62 93-11 175-11C240-11 297 22 347 89C392 151 415 216 415 283C415 370 364 445 281 445M279 415C318 415 337 385 337 326C337 299 331 263 319 218C297 133 268 75 233 44C213 27 194 19 175 19C134 19 114 51 114 115C114 137 119 170 129 214L151 304C154 319 159 330 165 338C204 389 242 415 279 415Z"></path><path id="MJX-2-NCM-I-1D450" d="M328 325C328 300 341 287 368 287C404 287 427 318 427 354C427 410 368 442 308 442C239 442 176 412 122 353C68 294 41 229 41 159C41 61 106-11 204-11C257-11 304 2 345 27C379 48 404 69 420 90C427 99 430 106 430 109C430 120 425 126 414 126C409 126 404 122 398 114C365 70 324 42 277 30C246 22 223 18 206 18C149 18 121 53 121 122C121 184 150 274 174 317C198 361 249 413 308 413C346 413 372 402 386 381C355 378 328 358 328 325Z"></path><path id="MJX-2-NCM-I-1D451" d="M429 632L370 389C349 426 320 445 281 445C216 445 159 412 109 345C63 283 40 218 40 151C40 63 91-11 175-11C218-11 260 12 300 59C311 21 345-11 392-11C461-11 483 71 498 145C498 154 493 159 483 159C474 159 468 152 465 138C445 59 421 19 394 19C377 19 368 33 368 60C368 75 370 91 374 107L516 679L516 683C513 690 507 694 499 694C476 694 434 690 374 683C363 682 357 674 357 660C357 650 366 645 384 645C403 645 429 646 429 632M341 376C351 355 356 341 356 332C355 328 354 323 353 316L304 122C301 111 294 99 285 87C248 42 212 19 177 19C138 19 118 49 118 108C118 132 124 168 136 216C157 301 187 359 224 390C244 407 263 415 282 415C309 415 329 402 341 376Z"></path><path id="MJX-2-NCM-N-3D" d="M698 367L80 367C64 367 56 359 56 344C56 329 64 321 80 321L698 321C714 321 722 329 722 344C722 356 711 367 698 367M698 179L80 179C64 179 56 171 56 156C56 141 64 133 80 133L698 133C714 133 722 141 722 156C722 169 711 179 698 179Z"></path><path id="MJX-2-NCM-N-2212" d="M698 270L80 270C64 270 56 263 56 250C56 237 64 230 80 230L698 230C714 230 722 237 722 250C722 262 710 270 698 270Z"></path></defs></svg><mjx-break size="4"> </mjx-break><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="4.762ex" height="2.262ex" role="img" focusable="false" viewBox="0 -750 2104.8 1000" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math" data-latex="\begin{vmatrix}a &amp; b\\
+c &amp; d
+\end{vmatrix}=ad-bc"><g data-mml-node="mo" data-latex="="><use data-c="3D" xlink:href="#MJX-2-NCM-N-3D"></use></g><g data-mml-node="mi" data-latex="a" transform="translate(1055.8,0)"><use data-c="1D44E" xlink:href="#MJX-2-NCM-I-1D44E"></use></g><g data-mml-node="mi" data-latex="d" transform="translate(1584.8,0)"><use data-c="1D451" xlink:href="#MJX-2-NCM-I-1D451"></use></g></g></g></svg><mjx-break size="3"> </mjx-break><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="4.213ex" height="2.262ex" role="img" focusable="false" viewBox="0 -750 1862.2 1000" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math" data-latex="\begin{vmatrix}a &amp; b\\
+c &amp; d
+\end{vmatrix}=ad-bc"><g data-mml-node="mo" data-latex="-"><use data-c="2212" xlink:href="#MJX-2-NCM-N-2212"></use></g><g data-mml-node="mi" data-latex="b" transform="translate(1000.2,0)"><use data-c="1D44F" xlink:href="#MJX-2-NCM-I-1D44F"></use></g><g data-mml-node="mi" data-latex="c" transform="translate(1429.2,0)"><use data-c="1D450" xlink:href="#MJX-2-NCM-I-1D450"></use></g></g></g></svg></mjx-container></span><p>Inline</p><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">You can also do inline math like $e^{2i\pi} = 1$</span></span></code></pre><button class="copy-code-button">copy</button></div><p>You can also do inline math like <span class="math math-inline"><mjx-container class="MathJax" jax="SVG" overflow="overflow"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="3.506ex" height="2.452ex" role="img" focusable="false" viewBox="0 -833.9 1549.6 1083.9" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math" data-latex="e^{2i\pi} = 1"><g data-mml-node="msup" data-latex="e^{2i\pi}"><g data-mml-node="mi" data-latex="e"><use data-c="1D452" xlink:href="#MJX-1-NCM-I-1D452"></use></g><g data-mml-node="TeXAtom" transform="translate(499,363) scale(0.707)" data-latex="{2i\pi}" data-mjx-texclass="ORD"><g data-mml-node="mn" data-latex="2"><use data-c="32" xlink:href="#MJX-1-NCM-N-32"></use></g><g data-mml-node="mi" data-latex="i" transform="translate(500,0)"><use data-c="1D456" xlink:href="#MJX-1-NCM-I-1D456"></use></g><g data-mml-node="mi" data-latex="\pi" transform="translate(845,0)"><use data-c="1D70B" xlink:href="#MJX-1-NCM-I-1D70B"></use></g></g></g></g></g><defs><path id="MJX-1-NCM-I-1D452" d="M124 129C124 153 129 186 139 227L188 227C253 227 303 235 339 250C372 264 394 284 405 309C412 326 415 342 415 355C415 410 363 442 307 442C268 442 229 432 190 412C113 372 46 281 46 171C46 69 105-11 204-11C257-11 304 2 345 27C379 48 404 69 420 90C427 99 430 106 430 109C430 120 425 126 414 126C409 126 404 122 398 114C365 70 324 42 277 30C246 22 223 18 206 18C149 18 124 72 124 129M375 355C375 289 311 256 182 256L147 256C166 322 194 366 232 387C262 404 287 413 307 413C343 413 375 391 375 355Z"></path><path id="MJX-1-NCM-N-32" d="M237 666C186 666 143 648 106 612C69 576 50 534 50 483C50 449 75 424 106 424C136 424 161 450 161 480C161 513 137 536 105 536C102 536 100 536 98 535C117 584 161 627 224 627C306 627 352 556 352 470C352 403 318 331 250 255L62 43C49 28 50 29 50 0L421 0L450 180L417 180C409 129 402 100 396 91C391 86 361 84 306 84L139 84L236 179C304 243 390 312 419 365C439 400 449 435 449 470C449 588 357 666 237 666Z"></path><path id="MJX-1-NCM-I-1D456" d="M284 621C284 648 271 661 244 661C216 661 188 633 188 605C188 578 202 565 229 565C257 565 284 593 284 621M259 138C237 59 205 19 164 19C151 19 144 28 144 47C144 64 173 150 232 306C240 329 244 347 244 360C244 409 210 445 161 445C118 445 84 420 59 369C39 328 29 301 29 288C29 279 34 275 45 275C58 275 60 281 64 295C87 375 118 415 158 415C171 415 178 406 178 387C178 373 175 357 168 338C145 275 121 208 101 155C86 115 78 88 78 74C78 25 114-11 162-11C205-11 239 14 264 64C283 103 293 130 293 145C293 154 288 159 277 159C274 159 259 150 259 138Z"></path><path id="MJX-1-NCM-I-1D70B" d="M524 431L194 431C153 431 117 415 88 384C74 369 27 305 27 292C31 285 31 279 43 279C50 279 56 283 62 292C94 341 135 366 184 366L235 366C212 279 170 172 110 45C105 33 102 24 102 19C102-1 113-11 134-11C153-11 167 0 176 21C194 78 207 122 214 152L269 366L372 366C345 247 331 164 331 117C331 68 342-11 379-11C400-11 423 9 423 30C423 35 421 43 417 53C398 100 389 153 389 214C389 261 395 312 406 366L515 366C550 366 567 378 567 403C567 426 549 431 524 431Z"></path><path id="MJX-1-NCM-N-3D" d="M698 367L80 367C64 367 56 359 56 344C56 329 64 321 80 321L698 321C714 321 722 329 722 344C722 356 711 367 698 367M698 179L80 179C64 179 56 171 56 156C56 141 64 133 80 133L698 133C714 133 722 141 722 156C722 169 711 179 698 179Z"></path><path id="MJX-1-NCM-N-31" d="M269 666C228 624 168 603 89 603L89 564C141 564 184 572 217 588L217 82C217 64 213 52 204 47C195 42 170 39 130 39L95 39L95 0C120 2 174 3 257 3C340 3 394 2 419 0L419 39L384 39C343 39 318 42 310 47C302 52 297 64 297 82L297 636C297 660 295 666 269 666Z"></path></defs></svg><mjx-break size="4"> </mjx-break><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="3.52ex" height="2.262ex" role="img" focusable="false" viewBox="0 -750 1555.8 1000" xmlns:xlink="http://www.w3.org/1999/xlink"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math" data-latex="e^{2i\pi} = 1"><g data-mml-node="mo" data-latex="="><use data-c="3D" xlink:href="#MJX-1-NCM-N-3D"></use></g><g data-mml-node="mn" data-latex="1" transform="translate(1055.8,0)"><use data-c="31" xlink:href="#MJX-1-NCM-N-31"></use></g></g></g></svg></mjx-container></span></p><h3 id="注释 Comments" class="markdown-heading" data-heading="注释 Comments" tabindex="-1"><a aria-label="link to this heading" aria-describedby="注释 Comments" href="#%E6%B3%A8%E9%87%8A%20Comments">#</a>注释 Comments</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">Here is some inline comments: %%You can't see this text%% (Can't see it in Reading mode)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">Here is a block comment: (can't see it in Reading mode either)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">%%</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">It can span</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">multiple lines</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">%%</span></span></code></pre><button class="copy-code-button">copy</button></div><p>Here is some inline comments:  (Can’t see it in Reading mode)</p><p>Here is a block comment: (can’t see it in Reading mode either)</p><p></p><h3 id="标注 Callouts" class="markdown-heading" data-heading="标注 Callouts" tabindex="-1"><a aria-label="link to this heading" aria-describedby="标注 Callouts" href="#%E6%A0%87%E6%B3%A8%20Callouts">#</a>标注 Callouts</h3><div class="code-block"><pre class="shiki highlighting language-markdown" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="markdown"><code class="language-markdown"><span class="line"><span style="color:var(--shiki-foreground)">&gt; [</span><span style="color:var(--shiki-token-keyword)">!INFO</span><span style="color:var(--shiki-foreground)">]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">&gt; Here's a callout block.</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">&gt; It supports </span><span style="color:var(--shiki-foreground);font-weight:bold">**markdown**</span></span></code></pre><button class="copy-code-button">copy</button></div><div data-callout-fold="-" data-callout="info" class="callout is-collapsible is-collapsed"><div class="callout-title"><div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><circle cx="12" cy="12" r="10"></circle>
+<path d="M12 16v-4"></path>
+<path d="M12 8h.01"></path></svg></div><div class="callout-title-inner">Info</div><div class="callout-fold"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="m6 9 6 6 6-6"></path></svg></div></div><div class="callout-content hidden"><p>Here’s a callout block.
+It supports <strong>markdown</strong></p></div></div><p>补充：<a href="https://github.github.com/gfm/" rel="noonpener" class="external-link" target="_blank">Github Flavored Markdown(GFM)</a></p><blockquote><p><code translate="no">Hammerspoon</code> 是一个 macos 上的自动化工具</p></blockquote><h3 id="Basics" class="markdown-heading" data-heading="Basics" tabindex="-1"><a aria-label="link to this heading" aria-describedby="Basics" href="#Basics">#</a>Basics</h3><ul class="contains-task-list has-list-bullet"><li data-task="" class="task-list-item"><input type="checkbox" disabled="" class="task-list-item-checkbox">todo</li><li data-task="/" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">incomplete</li><li data-task="x" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">done</li><li data-task="-" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">cancel</li><li data-task=">" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">forwarded</li><li data-task="<" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">scheduling</li></ul><h3 id="Extras" class="markdown-heading" data-heading="Extras" tabindex="-1"><a aria-label="link to this heading" aria-describedby="Extras" href="#Extras">#</a>Extras</h3><ul class="contains-task-list has-list-bullet"><li data-task="?" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">question</li><li data-task="!" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">important</li><li data-task="*" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">star</li><li data-task="&quot;" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">quote</li><li data-task="l" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">location</li><li data-task="b" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">bookmark</li><li data-task="i" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">information</li><li data-task="S" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">savings</li><li data-task="I" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">Idean</li><li data-task="p" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">pros</li><li data-task="c" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">cons</li><li data-task="f" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">fire</li><li data-task="k" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">key</li><li data-task="w" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">win</li><li data-task="u" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">up</li><li data-task="d" class="task-list-item is-checked"><input type="checkbox" disabled="" class="task-list-item-checkbox" checked="">down</li></ul><p>:fff{红色的文本}</p><p><img class="emoji" src="/emojis/67f472ac/doge.png" alt=":doge:" data-astro-cid-m7eaid7o=""></p><section class="footnotes"><hr><ol><li data-footnote-id="fn-1" id="fn-1"><p>meaningful!<a href="#fnref-1" class="footnote-backref footnote-link">↩</a></p></li><li data-footnote-id="fn-bignote" id="fn-bignote"><p>Here’s one with multiple paragraphs and code.<a href="#fnref-bignote" class="footnote-backref footnote-link">↩</a></p></li></ol></section></article><noscript><style>.toc-panel nav { display: block; }.toc-toggle { display: none; }.toc-title { display: block; }</style></noscript></div><div class="post-metadata"><p class="post-modified" aria-label="最后更新时间"><span aria-hidden="true">/*</span>最后更新于 <time datetime="2026-02-16T23:19:10.000Z">2026年2月17日</time><span aria-hidden="true">*/</span></p><div class="post-tags"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>
+<circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg><ul class="post-tag-list" aria-label="文章标签列表"><li><a class="post-tag-link" href="/tags/tag%E7%BB%99/">#tag给</a></li></ul></div><div class="post-meta-row" aria-label="文章分类"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><a class="post-category-link" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a></div><div class="post-meta-row" aria-label="文章统计"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/>
+<path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+<path d="M10 9H8"/>
+<path d="M16 13H8"/>
+<path d="M16 17H8"/></svg><span class="post-word-count" aria-label="字数统计">2794 Words</span></div></div><nav class="post-navigation" aria-label="文章导航"><p class="post-navigation-item"><span class="post-navigation-label" aria-hidden="true">上一篇：</span><a class="post-navigation-link" href="/posts/2024-03-12-如何在局域网查找某个 IPv6 地址/" rel="prev" aria-label="上一篇：如何在局域网查找某个 IPv6 地址">如何在局域网查找某个 IPv6 地址</a></p><p class="post-navigation-item next"><span class="post-navigation-label" aria-hidden="true">下一篇：</span><a class="post-navigation-link" href="/posts/2024-05-12-博客重新上线/" rel="next" aria-label="下一篇：博客重新上线">博客重新上线</a></p></nav><div class="comments" id="comment" aria-label="文章评论" data-astro-cid-nuen6n26><button class="load-comments" type="button" aria-label="加载评论区" data-astro-cid-nuen6n26><span data-astro-cid-nuen6n26>載入評論</span></button></div><script type="module" src="/assets/Comments.astro_astro_type_script_index_0_lang.CxArsHF6.js"></script></main></div><footer data-astro-transition-scope="astro-jregkupr-6" class="site-footer" role="contentinfo" aria-label="网站页脚" data-astro-cid-fn43irff><div class="footer-copy" data-astro-cid-fn43irff><p class="footer-signature" aria-label="个性签名" data-astro-cid-fn43irff>每一份未兑现的承诺都存在着代价</p><p class="footer-details" aria-label="版权、协议与社交信息" data-astro-cid-fn43irff><span data-astro-cid-fn43irff>&copy; <time data-astro-cid-fn43irff>2026</time><a href="/about/" data-astro-cid-fn43irff>拂若華</a></span><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" aria-label="查看知识共享署名 4.0 协议" rel="license" title="本作品采用 CC BY 4.0 许可" data-astro-cid-fn43irff>CC BY-NC 4.0</a><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="/rss.xml" target="_blank" title="rss" aria-label="订阅本站 RSS 源" type="application/rss+xml" data-astro-cid-fn43irff><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-icon" data-astro-cid-fn43irff><path d="M4 11a9 9 0 0 1 9 9" data-astro-cid-fn43irff></path><path d="M4 4a16 16 0 0 1 16 16" data-astro-cid-fn43irff></path><circle cx="5" cy="19" r="1" data-astro-cid-fn43irff></circle></svg></a><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="https://github.com/tonitrnel" target="_blank" title="github" aria-label="访问作者 GitHub 主页" rel="me noopener noreferrer" data-astro-cid-fn43irff><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-icon" data-astro-cid-fn43irff><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" data-astro-cid-fn43irff></path><path d="M9 18c-4.51 2-5-2-7-2" data-astro-cid-fn43irff></path></svg></a></p></div></footer><!-- build date: 2026-09-10T02:44:17.286Z ᓚᘏᗢ--></body></html><!-- Keep article layout available at first paint, including during development. --><style>
+  .post-opening-with-cover {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr);
+    align-items: center;
+    gap: 3rem;
+    width: min(calc(100vw - 4rem), 54rem);
+    margin-inline: calc((100% - min(calc(100vw - 4rem), 54rem)) / 2);
+    padding-block: 1rem 3rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1rem;
+  }
+  .post-cover {
+    grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
+  }
+  .post-cover-image {
+    display: block;
+    height: 310px;
+    object-fit: cover;
+    width: 100%;
+  }
+  .post-heading {
+    position: relative;
+  }
+  .post-heading-with-cover {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: 1rem;
+  }
+  .post-heading-with-cover .post-published {
+    order: 1;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    opacity: 1;
+    font-weight: 400;
+  }
+  .post-heading-with-cover .md-title {
+    font-size: clamp(2rem, 3.3vw, 2.65rem);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: 0.035em;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    text-wrap: balance;
+  }
+  @media (max-width: 700px) {
+    .post-opening-with-cover {
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+      margin-inline: 0;
+      gap: 2rem;
+      padding-block: 0 2rem;
+    }
+    .post-cover {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .post-cover-image {
+      height: auto;
+      max-height: 260px;
+    }
+    .post-heading-with-cover {
+      padding-block: 0;
+    }
+    .post-heading-with-cover .md-title {
+      font-size: 2rem;
+    }
+  }
+  .post-published {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    opacity: 0.75;
+  }
+  .post-content {
+    margin-top: 2.5rem;
+    width: 100%;
+  }
+  .post-reading {
+    position: relative;
+    display: flow-root;
+  }
+  .post-metadata {
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    opacity: 0.85;
+  }
+  .post-tags,
+  .post-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .post-tags {
+    margin-top: 2rem;
+  }
+  .post-meta-row {
+    margin-block: 1rem;
+  }
+  .post-meta-icon {
+    margin-right: 0.5rem;
+  }
+  .post-tag-list {
+    display: flex;
+    gap: 0.75rem;
+    line-height: 1;
+  }
+  .post-category-link {
+    line-height: 1;
+    text-decoration: none;
+  }
+  .post-tag-link:hover,
+  .post-category-link:hover,
+  .post-navigation-link:hover {
+    text-decoration: underline;
+  }
+  .post-word-count {
+    padding-top: 0.125rem;
+    line-height: 1;
+  }
+  .post-modified {
+    font-style: italic;
+    span {
+      padding: 0 6px;
+    }
+  }
+  .post-navigation {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .post-navigation-item {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+  }
+  .post-navigation-item.next {
+    text-align: right;
+  }
+  .post-navigation-label {
+    opacity: 0.6;
+  }
+  .post-navigation-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+</style><style>
+  .md-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.06em;
+    margin: 0.6rem 0 1.2rem;
+    overflow-wrap: anywhere;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  .md-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 3px;
+    width: 4rem;
+    border-radius: 2px;
+    opacity: 0.8;
+    background: linear-gradient(90deg, var(--secondary) 0%, transparent 85%);
+  }
+</style>

@@ -1,0 +1,592 @@
+<!DOCTYPE html><html data-astro-transition-scope="astro-yztbsuuz-2" class="theme-light" lang="zh-CN" data-astro-cid-ju4pidww><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#f6f5f0"><link href="/favicon.svg" rel="icon" type="image/svg+xml"><title>使用代码实现 WSL 的虚拟磁盘自动挂载</title><link rel="canonical" href="https://blog.ptdg.dev/posts/2026-02-20-%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%20WSL%20%E7%9A%84%E8%99%9A%E6%8B%9F%E7%A3%81%E7%9B%98%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/"><meta name="title" content="使用代码实现 WSL 的虚拟磁盘自动挂载"><meta name="description" content="这是一个空白的画卷，我用其为未来制作一丝回忆"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"使用代码实现 WSL 的虚拟磁盘自动挂载","description":"这是一个空白的画卷，我用其为未来制作一丝回忆","author":{"@type":"Person","name":"拂若華"},"datePublished":"2026-02-20T09:31:00.000Z","articleSection":"记录","wordCount":5451}</script><meta property="og:title" content="使用代码实现 WSL 的虚拟磁盘自动挂载"><meta property="og:description" content="这是一个空白的画卷，我用其为未来制作一丝回忆"><meta property="og:url" content="https://blog.ptdg.dev/posts/2026-02-20-%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%20WSL%20%E7%9A%84%E8%99%9A%E6%8B%9F%E7%A3%81%E7%9B%98%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD/"><meta property="og:type" content="article"><meta property="article:author" content="拂若華"><meta property="article:published_time" content="2026-02-20T09:31:00.000Z"><script>
+  (function () {
+    function applyTheme() {
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const storageTheme = sessionStorage.getItem('theme');
+      const isDark = storageTheme === 'dark' || (!storageTheme && isSystemDark);
+      const themeColor = document.head.children.namedItem('theme-color');
+      if (isDark) {
+        document.documentElement.classList.remove('theme-light');
+        document.documentElement.classList.add('theme-dark');
+        if (themeColor) themeColor.content = '#1b1b19';
+      } else {
+        document.documentElement.classList.remove('theme-dark');
+        document.documentElement.classList.add('theme-light');
+        if (themeColor) themeColor.content = '#f6f5f0';
+      }
+    }
+    applyTheme();
+    document.addEventListener('astro:after-swap', applyTheme);
+  })();
+</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/assets/ClientRouter.astro_astro_type_script_index_0_lang.Ckbx0Etl.js"></script><script type="module" src="/assets/Layout.astro_astro_type_script_index_0_lang.CHzLsb3o.js"></script><link rel="stylesheet" href="/assets/Renderer.BPQMiJuM.css"><link rel="stylesheet" href="/assets/Helmet.BYnb6_pI.css"><link rel="stylesheet" href="/assets/_slug_.BhOkEj1n.css"><style>[data-astro-transition-scope="astro-2uohob67-1"] { view-transition-name: post-title-069fe754d3c740ba; }@layer astro { ::view-transition-old(post-title-069fe754d3c740ba) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(post-title-069fe754d3c740ba) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(post-title-069fe754d3c740ba) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(post-title-069fe754d3c740ba) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-yztbsuuz-2"] { view-transition-name: site-root; }@layer astro { ::view-transition-old(site-root) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(site-root) { animation: none; mix-blend-mode: normal; }::view-transition-group(site-root) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-yztbsuuz-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-yztbsuuz-2"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-yztbsuuz-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-yztbsuuz-2"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-jgduxsen-3"] { view-transition-name: page-content; }@layer astro { ::view-transition-old(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-out; }::view-transition-new(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-in; }[data-astro-transition=back]::view-transition-old(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-out; }[data-astro-transition=back]::view-transition-new(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-in; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-out; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-in; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-out; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-in; }</style><style>[data-astro-transition-scope="astro-f4pvgsiq-4"] { view-transition-name: feather-background; }@layer astro { ::view-transition-old(feather-background) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(feather-background) { animation: none; mix-blend-mode: normal; }::view-transition-group(feather-background) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-f4pvgsiq-4"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-f4pvgsiq-4"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-f4pvgsiq-4"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-f4pvgsiq-4"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-pcq43t4g-5"] { view-transition-name: site-header; }@layer astro { ::view-transition-old(site-header) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(site-header) { animation: none; mix-blend-mode: normal; }::view-transition-group(site-header) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-pcq43t4g-5"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-pcq43t4g-5"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-pcq43t4g-5"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-pcq43t4g-5"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-jregkupr-6"] { view-transition-name: site-footer; }@layer astro { ::view-transition-old(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head><body data-astro-cid-ju4pidww><raven-background class="feather-background" aria-hidden="true" data-astro-transition-scope="astro-f4pvgsiq-4" data-astro-transition-persist="feather-background" data-astro-cid-qz57aosd="true"><svg class="snow snow-right" viewBox="0 0 160 300" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#snow-right" data-astro-cid-qz57aosd></use></svg><svg class="snow snow-left" viewBox="0 0 100 180" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#snow-left" data-astro-cid-qz57aosd></use></svg><div class="feather-lane drifting-lane" data-astro-cid-qz57aosd><svg class="feather drifting" viewBox="0 0 120 320" fill="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#feather" data-astro-cid-qz57aosd></use></svg></div><div class="feather-lane fragment-lane" data-astro-cid-qz57aosd><svg class="feather fragment" viewBox="0 0 120 320" fill="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#feather" data-astro-cid-qz57aosd></use></svg></div></raven-background><!-- Initialize before the first paint instead of waiting for the shared module. --><script>
+  (() => {
+    if (customElements.get('raven-background')) return;
+    // Native page loads must reuse the same arrangement as client navigation.
+    let seed = 1;
+    try {
+      const saved = Number(sessionStorage.getItem('feather-seed'));
+      seed = Number.isInteger(saved) && saved > 0 && saved < 2147483647
+        ? saved : Math.floor(Math.random() * 2147483646) + 1;
+      sessionStorage.setItem('feather-seed', String(seed));
+    } catch {
+      // A fixed seed keeps the background stable when storage is unavailable.
+      seed = 1;
+    }
+    const random = () => {
+      seed = seed * 16807 % 2147483647;
+      return (seed - 1) / 2147483646;
+    };
+    const arrangements = [0, 1].map((index) => ({
+      top: `${(index ? 60 : 15) + random() * (index ? 17 : 25)}%`,
+      angle: `${(index ? 35 : -28) + random() * 45 + (random() < .35 ? 180 : 0)}deg`,
+      scale: String((index ? .35 : .8) + random() * .18),
+      inset: `${-.5 + random()}rem`,
+      shape: ['full', 'slender', 'swept'][Math.floor(random() * 3)],
+    }));
+    customElements.define('raven-background', class extends HTMLElement {
+      connectedCallback() {
+        this.querySelectorAll('.feather').forEach((feather, index) => {
+          const arrangement = arrangements[index];
+          if (!arrangement) return;
+          for (const key of ['top', 'angle', 'scale', 'inset']) {
+            feather.style.setProperty(`--${key}`, arrangement[key]);
+          }
+          feather.dataset.shape = arrangement.shape;
+        });
+      }
+    });
+  })();
+</script><header data-astro-transition-scope="astro-pcq43t4g-5" class="header" role="banner" aria-label="网站页头"><div class="header-inner"><h1 class="header-title" aria-label="网站标题"><a href="/" class="site-brand" aria-label="返回首页"><svg class="brand-raven" viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><!-- A perched corvid, with a heavy bill and etched wing feathers. --><path d="M29 167 62 117C72 103 89 95 105 79L124 48C132 33 153 30 167 39L178 51 208 65 176 69C172 93 169 116 149 134L113 151 55 174 68 153Z" fill="currentColor"></path><path d="M111 89C91 110 80 130 64 153M123 92C109 113 96 132 80 145M134 94C124 114 113 130 99 139M145 94C140 111 133 124 121 131" stroke="var(--paper)" stroke-width="1.3" opacity=".48"></path><path d="m131 139 2 30 15 7m-15-7-10 7m25-40 8 31 15 6m-15-6-7 9" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="161" cy="52" r="2.5" fill="var(--paper)"></circle><path d="m180 60 19 5" stroke="var(--paper)" stroke-width="1" opacity=".6"></path><path d="M17 178c64-5 132 4 208-2" stroke="currentColor" stroke-width="1.2"></path></svg>繪畫世界</a></h1><nav class="nav-menu header-nav" aria-label="主导航菜单" role="navigation" data-astro-cid-xr2ojvak><ul class="nav-menu-list" aria-label="主导航菜单列表" role="list" data-astro-cid-xr2ojvak><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/posts/" class="nav-link is-active" itemprop="url" aria-current="page" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>文章</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/categories/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>分類</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/tags/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>標籤</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/projects/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>項目</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/about/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>關於</a></li></ul></nav><a class="icon-control header-action" href="/search/" aria-label="网站搜索" role="button" title="打开搜索"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><path d="m21 21-4.34-4.34"/>
+<circle cx="11" cy="11" r="8"/></svg></a><theme-control class="icon-control header-action" role="button" aria-label="切换主题配色" title="切换深色/浅色模式"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><circle cx="12" cy="12" r="4"/>
+<path d="M12 2v2"/>
+<path d="M12 20v2"/>
+<path d="m4.93 4.93 1.41 1.41"/>
+<path d="m17.66 17.66 1.41 1.41"/>
+<path d="M2 12h2"/>
+<path d="M20 12h2"/>
+<path d="m6.34 17.66-1.41 1.41"/>
+<path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></theme-control><mobile-nav class="mobile-nav" aria-label="移动导航"><button type="button" id="nav-menu-toggle" aria-label="打开导航菜单" aria-expanded="false" aria-controls="mobile-nav-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path class="menu-lines" d="M4 6h16M4 12h16M4 18h16"></path><path class="menu-close" d="m6 6 12 12M6 18 18 6"></path></svg></button><nav id="mobile-nav-menu" aria-label="移动导航菜单" hidden><ul class="mobile-nav-list"><li class="mobile-nav-item"><a href="/posts/" class="nav-link is-active" itemprop="url" aria-current="page" data-astro-cid-hwj3apfd>文章</a></li><li class="mobile-nav-item"><a href="/categories/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>分類</a></li><li class="mobile-nav-item"><a href="/tags/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>標籤</a></li><li class="mobile-nav-item"><a href="/projects/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>項目</a></li><li class="mobile-nav-item"><a href="/about/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>關於</a></li></ul></nav></mobile-nav></div></header><div data-astro-transition-scope="astro-jgduxsen-3" data-astro-cid-ju4pidww><main class="container post-page" role="main" aria-label="文章正文"><div class="post-opening"><header class="post-heading"><time class="post-published" datetime="2026-02-20T09:31:00.000Z" aria-label="发布日期">2026年2月20日</time><h1 class="md-title" aria-label="文章标题"><span data-astro-transition-scope="astro-2uohob67-1" class="transition-title">使用代码实现 WSL 的虚拟磁盘自动挂载</span></h1></header></div><div class="post-reading"><post-toc><aside class="toc-sidebar" aria-label="文章目录"><div class="toc-panel"><span class="toc-title">本文目录</span><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="post-toc-links"><span>本文目录</span><span class="toc-chevron" aria-hidden="true">⌄</span></button><nav id="post-toc-links" aria-label="文章标题导航"><ol><li><a href="#%E5%85%B3%E4%BA%8E%E8%AF%86%E5%88%AB%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF" style="--depth: 0">关于识别的核心思路</a></li><li><a href="#Windows%20%E4%BE%A7%EF%BC%9A%E5%88%9B%E5%BB%BA%20VHDX" style="--depth: 0">Windows 侧：创建 VHDX</a></li><li><a href="#%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86" style="--depth: 1">权限处理</a></li><li><a href="#%E5%88%9B%E5%BB%BA%20VHDX" style="--depth: 1">创建 VHDX</a></li><li><a href="#Linux%20%E4%BE%A7%EF%BC%9A%E8%AF%86%E5%88%AB%E6%AD%A3%E7%A1%AE%E7%9A%84%E8%AE%BE%E5%A4%87" style="--depth: 0">Linux 侧：识别正确的设备</a></li><li><a href="#%E6%9F%A5%E6%89%BE%E8%AE%BE%E5%A4%87" style="--depth: 1">查找设备</a></li><li><a href="#%E5%85%B3%E4%BA%8E%20GUID%20%E5%88%B0%E8%AE%BE%E5%A4%87%E6%A0%87%E8%AF%86%E7%9A%84%E5%8C%B9%E9%85%8D" style="--depth: 1">关于 GUID 到设备标识的匹配</a></li><li><a href="#%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA" style="--depth: 0">创建分区</a></li><li><a href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%88%86%E5%8C%BA" style="--depth: 0">格式化分区</a></li><li><a href="#%E6%8C%82%E8%BD%BD%E5%88%86%E5%8C%BA" style="--depth: 0">挂载分区</a></li><li><a href="#%E5%B9%82%E7%AD%89%E6%80%A7" style="--depth: 0">幂等性</a></li><li><a href="#%E5%B0%8F%E7%BB%93" style="--depth: 0">小结</a></li></ol></nav></div></aside></post-toc><article class="md-content post-content" aria-label="文章内容"><p>在 WSL 2 开发环境中，额外挂载一块磁盘是很常见的需求：隔离数据、放缓存，或者模拟更接近真实 Linux 机器的磁盘布局。</p><p>这件事手动做也不麻烦，就几条命令，但是由于业务需要自动化所以研究了下，主要麻烦点就是解决这块硬盘是 <code translate="no">/dev/sdc</code> 还是 <code translate="no">/dev/sdd</code>的问题。这里记录一下当个纪念。</p><p>本文所使用的编程语言是 Rust，主要使用 <code translate="no">windows</code>、<code translate="no">nix</code> 等 crate。主要用于调用 Windows 的虚拟磁盘相关 API 来创建 VHDX 和 Linux 的一些 API。</p><p>本文主要处理两类磁盘：</p><ul class="has-list-bullet"><li><p>虚拟磁盘：基于 <code translate="no">.vhdx</code> 文件，推荐，也是本文重点</p></li><li><p>物理磁盘：理论上也能接入 WSL，但要先在 Windows 侧卸载该磁盘，流程更麻烦，这里只顺带提一下</p></li></ul><p>整体流程如下：</p><ol><li><p>Windows 侧创建 VHDX</p></li><li><p>通过 <code translate="no">wsl --mount --vhd ... --bare</code> 接入 WSL</p></li><li><p>Linux 侧识别目标设备</p></li><li><p>创建分区表</p></li><li><p>格式化文件系统</p></li><li><p>挂载到指定目录</p></li></ol><h2 id="关于识别的核心思路" class="markdown-heading" data-heading="关于识别的核心思路" tabindex="-1"><a aria-label="link to this heading" aria-describedby="关于识别的核心思路" href="#%E5%85%B3%E4%BA%8E%E8%AF%86%E5%88%AB%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF">#</a>关于识别的核心思路</h2><p>在 VHDX 接入 WSL 后，在 Linux 里通常会变成 <code translate="no">/dev/sdX</code> 一类设备名；但这个名字并不稳定，今天可能是 <code translate="no">/dev/sdc</code>，下次可能就成了 <code translate="no">/dev/sdd</code>&nbsp;，总之取决于挂载顺序。所以自动化的关键，不是记住设备名，而是给磁盘一个<strong>稳定标识</strong>，然后在 Linux 侧用这个标识把它找回来。</p><p>本文的做法是：</p><ul class="has-list-bullet"><li><p>在 Windows 创建 VHDX 时，显式指定一个 GUID</p></li><li><p>在 Linux 侧根据这个 GUID 推导候选设备标识并匹配目标磁盘</p></li></ul><h2 id="Windows 侧：创建 VHDX" class="markdown-heading" data-heading="Windows 侧：创建 VHDX" tabindex="-1"><a aria-label="link to this heading" aria-describedby="Windows 侧：创建 VHDX" href="#Windows%20%E4%BE%A7%EF%BC%9A%E5%88%9B%E5%BB%BA%20VHDX">#</a>Windows 侧：创建 VHDX</h2><h3 id="权限处理" class="markdown-heading" data-heading="权限处理" tabindex="-1"><a aria-label="link to this heading" aria-describedby="权限处理" href="#%E6%9D%83%E9%99%90%E5%A4%84%E7%90%86">#</a>权限处理</h3><p><code translate="no">CreateVirtualDisk</code> 是特权操作。普通权限下调用，大概率就是 <code translate="no">ERROR_ACCESS_DENIED</code>，所以第一步不是创建磁盘，而是先检查当前进程是否已提权；如果没有，就用 <code translate="no">ShellExecuteW(..., "runas", ...)</code> 重新拉起自己。</p><p>这段逻辑的目标很简单：</p><ul class="has-list-bullet"><li><p>已经在管理员权限下：继续执行</p></li><li><p>不是管理员：弹 UAC，提权后重启自身，并带上原始参数</p></li></ul><p>代码如下：</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Win32</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">UI</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Shell</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">ShellExecuteW</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Win32</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">UI</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">WindowsAndMessaging</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">SW_SHOW</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">core</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">{</span><span style="color:var(--shiki-token-function)">PCWSTR</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">HSTRING</span><span style="color:var(--shiki-foreground)">};</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">env;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">/// 检查并申请管理员权限</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> ensure_admin_privileges</span><span style="color:var(--shiki-foreground)">() </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> bool</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    if</span><span style="color:var(--shiki-token-function)"> is_elevated</span><span style="color:var(--shiki-foreground)">() {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        return</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> exe_path </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> env</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">current_exe</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">unwrap</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> exe_path_wide</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> Vec</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">u16</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> exe_path</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">to_string_lossy</span><span style="color:var(--shiki-foreground)">()</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">encode_utf16</span><span style="color:var(--shiki-foreground)">()</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">chain</span><span style="color:var(--shiki-foreground)">(std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">iter</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">once</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">))</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">collect</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> args</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> Vec</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> env</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">args</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">skip</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">1</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">collect</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> args_str </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> args</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">join</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">" "</span><span style="color:var(--shiki-foreground)">);</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> args_wide</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> Vec</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">u16</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> args_str</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">encode_utf16</span><span style="color:var(--shiki-foreground)">()</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">chain</span><span style="color:var(--shiki-foreground)">(std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">iter</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">once</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">))</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">collect</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> operation </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> HSTRING</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">from</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"runas"</span><span style="color:var(--shiki-foreground)">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    unsafe</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        ShellExecuteW</span><span style="color:var(--shiki-foreground)">(</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">            None</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            PCWSTR</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">from_raw</span><span style="color:var(--shiki-foreground)">(operation</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">as_ptr</span><span style="color:var(--shiki-foreground)">()),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            PCWSTR</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">from_raw</span><span style="color:var(--shiki-foreground)">(exe_path_wide</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">as_ptr</span><span style="color:var(--shiki-foreground)">()),</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            if</span><span style="color:var(--shiki-foreground)"> args</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">is_empty</span><span style="color:var(--shiki-foreground)">() {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">                PCWSTR</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">null</span><span style="color:var(--shiki-foreground)">()</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            } </span><span style="color:var(--shiki-token-keyword)">else</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">                PCWSTR</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">from_raw</span><span style="color:var(--shiki-foreground)">(args_wide</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">as_ptr</span><span style="color:var(--shiki-foreground)">())</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            },</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            PCWSTR</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">null</span><span style="color:var(--shiki-foreground)">(),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            SW_SHOW,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        );</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">process</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">exit</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">);</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">/// 检查当前进程是否已提升权限</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> is_elevated</span><span style="color:var(--shiki-foreground)">() </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> bool</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    use</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Win32</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Security</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        GetTokenInformation</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">TokenElevation</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">TOKEN_ELEVATION</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">TOKEN_QUERY</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    };</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    use</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Win32</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">System</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Threading</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">{</span><span style="color:var(--shiki-token-function)">GetCurrentProcess</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">OpenProcessToken</span><span style="color:var(--shiki-foreground)">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    unsafe</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        let</span><span style="color:var(--shiki-token-keyword)"> mut</span><span style="color:var(--shiki-foreground)"> token </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Win32</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Foundation</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">HANDLE</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">default</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        if</span><span style="color:var(--shiki-token-function)"> OpenProcessToken</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">GetCurrentProcess</span><span style="color:var(--shiki-foreground)">(), TOKEN_QUERY, </span><span style="color:var(--shiki-token-keyword)">&amp;mut</span><span style="color:var(--shiki-foreground)"> token)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">is_ok</span><span style="color:var(--shiki-foreground)">() {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            let</span><span style="color:var(--shiki-token-keyword)"> mut</span><span style="color:var(--shiki-foreground)"> elevation </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> TOKEN_ELEVATION</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">default</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            let</span><span style="color:var(--shiki-token-keyword)"> mut</span><span style="color:var(--shiki-foreground)"> size </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-constant)"> 0</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            if</span><span style="color:var(--shiki-token-function)"> GetTokenInformation</span><span style="color:var(--shiki-foreground)">(</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">                token,</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">                TokenElevation</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">                Some</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;mut</span><span style="color:var(--shiki-foreground)"> elevation </span><span style="color:var(--shiki-token-keyword)">as</span><span style="color:var(--shiki-token-keyword)"> *mut</span><span style="color:var(--shiki-foreground)"> _ </span><span style="color:var(--shiki-token-keyword)">as</span><span style="color:var(--shiki-token-keyword)"> *mut</span><span style="color:var(--shiki-foreground)"> _),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">                std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">mem</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">size_of</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">&lt;TOKEN_ELEVATION&gt;() </span><span style="color:var(--shiki-token-keyword)">as</span><span style="color:var(--shiki-token-function)"> u32</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                &amp;mut</span><span style="color:var(--shiki-foreground)"> size,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            )</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">is_ok</span><span style="color:var(--shiki-foreground)">()</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                return</span><span style="color:var(--shiki-foreground)"> elevation</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">TokenIsElevated</span><span style="color:var(--shiki-token-keyword)"> !=</span><span style="color:var(--shiki-token-constant)"> 0</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-constant)">    false</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="创建 VHDX" class="markdown-heading" data-heading="创建 VHDX" tabindex="-1"><a aria-label="link to this heading" aria-describedby="创建 VHDX" href="#%E5%88%9B%E5%BB%BA%20VHDX">#</a>创建 VHDX</h3><p>提权完成后，就可以调用 <code translate="no">CreateVirtualDisk</code> 创建 VHDX 了。</p><p>这里<strong>不要随机生成 GUID</strong>。需要显式传入一个 GUID，这个 ID 就是这块磁盘的后面在 WSL 下识别所需要的。</p><p>代码如下：</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">core</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">{</span><span style="color:var(--shiki-token-function)">GUID</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">PCWSTR</span><span style="color:var(--shiki-foreground)">};</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Win32</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Storage</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Vhd</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    CreateVirtualDisk</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">CREAT_VIRTUAL_DISK_PARAMETERS</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">CREATE_VIRTUAL_DISK_VERSION_2</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    VIRTUAL_DISK_ACCESS_NONE</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">CREATE_VIRTUAL_DISK_FLAG_FULL_PHYSICAL_ALLOCATION</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    VIRTUAL_STORAGE_TYPE</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">VIRTUAL_STORAGE_TYPE_DEVICE_VHDX</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">VIRTUAL_STORAGE_TYPE_VENDOR_MICROSOFT</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> create_vhdx</span><span style="color:var(--shiki-foreground)">(path</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">, size_bytes</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> u64</span><span style="color:var(--shiki-foreground)">, unique_id</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> GUID) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">core</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Result</span><span style="color:var(--shiki-foreground)">&lt;()&gt; {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> storage_type </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> VIRTUAL_STORAGE_TYPE {</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        DeviceId</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> VIRTUAL_STORAGE_TYPE_DEVICE_VHDX,</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        VendorId</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> VIRTUAL_STORAGE_TYPE_VENDOR_MICROSOFT,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    };</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-token-keyword)"> mut</span><span style="color:var(--shiki-foreground)"> params</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> CREATE_VIRTUAL_DISK_PARAMETERS </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-keyword)"> unsafe</span><span style="color:var(--shiki-foreground)"> { std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">mem</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">zeroed</span><span style="color:var(--shiki-foreground)">() };</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    params</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">Version</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-foreground)"> CREATE_VIRTUAL_DISK_VERSION_2;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    unsafe</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        let</span><span style="color:var(--shiki-foreground)"> v2 </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-keyword)"> &amp;mut</span><span style="color:var(--shiki-foreground)"> params</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">Anonymous</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">Version2</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        v2</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">UniqueId</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-foreground)"> unique_id;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        v2</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">MaximumSize</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-foreground)"> size_bytes;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        v2</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">BlockSizeInBytes</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-token-constant)"> 0</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        v2</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">SectorSizeInBytes</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-token-constant)"> 0</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> path_wide</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> Vec</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">u16</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> path</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">encode_utf16</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">chain</span><span style="color:var(--shiki-foreground)">(std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">iter</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">once</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">))</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">collect</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-token-keyword)"> mut</span><span style="color:var(--shiki-foreground)"> handle </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> windows</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Win32</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Foundation</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">HANDLE</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">default</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    unsafe</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        CreateVirtualDisk</span><span style="color:var(--shiki-foreground)">(</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            &amp;</span><span style="color:var(--shiki-foreground)">storage_type,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            PCWSTR</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">from_raw</span><span style="color:var(--shiki-foreground)">(path_wide</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">as_ptr</span><span style="color:var(--shiki-foreground)">()),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            VIRTUAL_DISK_ACCESS_NONE,</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">            None</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            CREATE_VIRTUAL_DISK_FLAG_FULL_PHYSICAL_ALLOCATION,</span></span>
+<span class="line"><span style="color:var(--shiki-token-constant)">            0</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            &amp;</span><span style="color:var(--shiki-foreground)">params,</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">            None</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            &amp;mut</span><span style="color:var(--shiki-foreground)"> handle,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        )</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><p>这里偏向使用固定大小预分配的 VHDX。自动扩容的性能可能没有固定大小预分配的好，且在宿主机不断增长容量感觉也很烦。</p><p>创建完成后，在 Windows 侧执行执行命令：</p><div class="code-block"><pre class="shiki highlighting language-powershell" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="powershell"><code class="language-powershell"><span class="line"><span style="color:var(--shiki-foreground)">wsl </span><span style="color:var(--shiki-token-keyword)">--</span><span style="color:var(--shiki-foreground)">mount </span><span style="color:var(--shiki-token-keyword)">--</span><span style="color:var(--shiki-foreground)">vhd </span><span style="color:var(--shiki-token-keyword)">&lt;</span><span style="color:var(--shiki-foreground)">path</span><span style="color:var(--shiki-token-keyword)">&gt;</span><span style="color:var(--shiki-token-keyword)"> --</span><span style="color:var(--shiki-foreground)">bare</span></span></code></pre><button class="copy-code-button">copy</button></div><p><code translate="no">--bare</code> 的意思是“只把这块磁盘接进 WSL，不自动挂载文件系统”。到这里为止，Linux 内核已经能看到这块盘了，但它还没有分区、也没有文件系统，更没有挂载点。下一步要转到 Linux 侧处理。</p><h2 id="Linux 侧：识别正确的设备" class="markdown-heading" data-heading="Linux 侧：识别正确的设备" tabindex="-1"><a aria-label="link to this heading" aria-describedby="Linux 侧：识别正确的设备" href="#Linux%20%E4%BE%A7%EF%BC%9A%E8%AF%86%E5%88%AB%E6%AD%A3%E7%A1%AE%E7%9A%84%E8%AE%BE%E5%A4%87">#</a>Linux 侧：识别正确的设备</h2><h3 id="查找设备" class="markdown-heading" data-heading="查找设备" tabindex="-1"><a aria-label="link to this heading" aria-describedby="查找设备" href="#%E6%9F%A5%E6%89%BE%E8%AE%BE%E5%A4%87">#</a>查找设备</h3><p>VHDX 接进 WSL 后，常见表现是一个新的 <code translate="no">/dev/sdX</code> 设备。但这个名字不稳定，不能拿来做自动化。</p><p>所以这里需要一个稳定识别策略。</p><p>本文的的做法在前面提到过，主要是：在 Windows 侧为 VHDX 指定 GUID，Linux 侧根据这个 GUID 推导出预期 WWID，然后遍历 <code translate="no">/sys/block/*/device/wwid</code> 做匹配。</p><h3 id="关于 GUID 到设备标识的匹配" class="markdown-heading" data-heading="关于 GUID 到设备标识的匹配" tabindex="-1"><a aria-label="link to this heading" aria-describedby="关于 GUID 到设备标识的匹配" href="#%E5%85%B3%E4%BA%8E%20GUID%20%E5%88%B0%E8%AE%BE%E5%A4%87%E6%A0%87%E8%AF%86%E7%9A%84%E5%8C%B9%E9%85%8D">#</a>关于 GUID 到设备标识的匹配</h3><p>Linux 下块设备的标识，常见可以从 <code translate="no">/sys/block/&lt;dev&gt;/device/serial</code> 或 <code translate="no">/sys/block/&lt;dev&gt;/device/wwid</code> 读取。这里使用的是 WWID</p><p>VHDX 的 GUID 和 WWID 是有关联的，首先 <code translate="no">naa.60022480</code> 的前缀是固定的，表示 Microsoft 的 SCSI vendor namespace，然后取前几位反转字节序后再拼接末尾 6 字节就是 WWID 了。</p><p>一个完整的 GUID 是 16 字节的：<code translate="no">00112233-4455-6677-8899-aabbccddeeff</code>, 而 WWID 总长也是固定的 16 字节，这里前缀用了 4 字节，末尾要用 6 字节，还剩 6 字节，反转一下 <code translate="no">Data1</code> 和 <code translate="no">Data2</code>
+的字节序即反转 <code translate="no">00112233-4455</code> 这一部分就是这 6 字节了。</p><p>代码如下：</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">/// 读取 /sys 下设备属性</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> read_sys_attr</span><span style="color:var(--shiki-foreground)">(dev_name</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">, attr</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Option</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">&gt; {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> path </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"/sys/block/{}/device/{}"</span><span style="color:var(--shiki-foreground)">, dev_name, attr);</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">fs</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">read_to_string</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">path)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">ok</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">map</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">s</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)"> s</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">trim</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">to_string</span><span style="color:var(--shiki-foreground)">())</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">/// 将 32 位不带分隔符的 GUID（VHDX UniqueId）转换为候选微软 NAA WWID：</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">/// "naa.60022480" + 一组按当前环境实测可用的字节重排</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> msft_naa_wwid_from_guid_hex</span><span style="color:var(--shiki-foreground)">(hex</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Option</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">&gt; {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> s </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> hex</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">trim</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    if</span><span style="color:var(--shiki-foreground)"> s</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">len</span><span style="color:var(--shiki-foreground)">() </span><span style="color:var(--shiki-token-keyword)">!=</span><span style="color:var(--shiki-token-constant)"> 32</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        return</span><span style="color:var(--shiki-token-function)"> None</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> bytes </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> (</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-token-keyword)">..</span><span style="color:var(--shiki-token-constant)">32</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">step_by</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">2</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">map</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">i</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)"> u8</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">from_str_radix</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">s[i</span><span style="color:var(--shiki-token-keyword)">..</span><span style="color:var(--shiki-foreground)">i </span><span style="color:var(--shiki-token-keyword)">+</span><span style="color:var(--shiki-token-constant)"> 2</span><span style="color:var(--shiki-foreground)">], </span><span style="color:var(--shiki-token-constant)">16</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">ok</span><span style="color:var(--shiki-foreground)">())</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">collect</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Option</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Vec</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">u8</span><span style="color:var(--shiki-foreground)">&gt;&gt;&gt;()</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-token-keyword)"> mut</span><span style="color:var(--shiki-foreground)"> out </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> Vec</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">with_capacity</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">12</span><span style="color:var(--shiki-foreground)">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">    // Data1 u32（Windows 二进制表示） -&gt; 调整字节顺序</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    out</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">extend_from_slice</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">[bytes[</span><span style="color:var(--shiki-token-constant)">3</span><span style="color:var(--shiki-foreground)">], bytes[</span><span style="color:var(--shiki-token-constant)">2</span><span style="color:var(--shiki-foreground)">], bytes[</span><span style="color:var(--shiki-token-constant)">1</span><span style="color:var(--shiki-foreground)">], bytes[</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">]]);</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">    // Data2 u16 -&gt; 调整字节顺序</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    out</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">extend_from_slice</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">[bytes[</span><span style="color:var(--shiki-token-constant)">5</span><span style="color:var(--shiki-foreground)">], bytes[</span><span style="color:var(--shiki-token-constant)">4</span><span style="color:var(--shiki-foreground)">]]);</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">    // 仅取后 6 字节，拼出当前环境下可匹配的 12 字节 body</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    out</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">extend_from_slice</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">bytes[</span><span style="color:var(--shiki-token-constant)">10</span><span style="color:var(--shiki-token-keyword)">..</span><span style="color:var(--shiki-token-constant)">16</span><span style="color:var(--shiki-foreground)">]);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> body </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> out</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">iter</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">map</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">b</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-token-function)"> format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"{:02x}"</span><span style="color:var(--shiki-foreground)">, b))</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">collect</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">&gt;();</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    Some</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"naa.60022480{}"</span><span style="color:var(--shiki-foreground)">, body))</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">/// 遍历 /sys/block 找盘</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> find_device_by_guid</span><span style="color:var(--shiki-foreground)">(guid_hex</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Result</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Option</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">&gt;&gt; {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> expected </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> msft_naa_wwid_from_guid_hex</span><span style="color:var(--shiki-foreground)">(guid_hex)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">unwrap</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    for</span><span style="color:var(--shiki-foreground)"> entry </span><span style="color:var(--shiki-token-keyword)">in</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">fs</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">read_dir</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"/sys/block"</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        let</span><span style="color:var(--shiki-foreground)"> name </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> entry</span><span style="color:var(--shiki-token-keyword)">?.</span><span style="color:var(--shiki-token-function)">file_name</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">into_string</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">unwrap</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        let</span><span style="color:var(--shiki-foreground)"> wwid_path </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"/sys/block/{}/device/wwid"</span><span style="color:var(--shiki-foreground)">, name);</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        if</span><span style="color:var(--shiki-token-keyword)"> let</span><span style="color:var(--shiki-token-function)"> Ok</span><span style="color:var(--shiki-foreground)">(wwid) </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">fs</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">read_to_string</span><span style="color:var(--shiki-foreground)">(wwid_path) {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            if</span><span style="color:var(--shiki-foreground)"> wwid</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">trim</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">eq_ignore_ascii_case</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">expected) {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                return</span><span style="color:var(--shiki-token-function)"> Ok</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">Some</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"/dev/{}"</span><span style="color:var(--shiki-foreground)">, name))); </span><span style="color:var(--shiki-token-comment)">// 找到了！例如 /dev/sdc</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    Ok</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">None</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h2 id="创建分区" class="markdown-heading" data-heading="创建分区" tabindex="-1"><a aria-label="link to this heading" aria-describedby="创建分区" href="#%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA">#</a>创建分区</h2><p>在通过 WWID 找到磁盘设备后，比如 <code translate="no">/dev/sdd</code>，下一步通常是创建 GPT 分区表并加一个分区。</p><p>可以通过命令创建分区，但是在最小化 Linux 分发版中，不一定具备分区工具，所以本文采用了 <code translate="no">gpt</code> crate 来创建分区， 然后就踩了一个坑：<em>分区表写到磁盘上，并不等于内核立刻知道了它变了</em>。</p><p>常见工具如 <code translate="no">fdisk</code>、<code translate="no">sfdisk</code> 在更新分区表后，会触发内核重新读取分区表。所以这里也需要补这一段， 调用 <code translate="no">ioctl(fd, BLKRRPART, ...)</code>，强制让内核重新扫描分区表：</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">fs</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">OpenOptions</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">os</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">unix</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">AsRawFd</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> partition_and_sync</span><span style="color:var(--shiki-foreground)">(device_path</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Result</span><span style="color:var(--shiki-foreground)">&lt;()&gt; {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-token-keyword)"> mut</span><span style="color:var(--shiki-foreground)"> disk </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> gpt</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">GptConfig</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">new</span><span style="color:var(--shiki-foreground)">()</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">writable</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">true</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">create</span><span style="color:var(--shiki-foreground)">(device_path)</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    disk</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">add_partition</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"DATA"</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">, gpt</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">partition_types</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">LINUX_FS, </span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">None</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    disk</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">write</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> file </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> OpenOptions</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">new</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">read</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">true</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">write</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">true</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">open</span><span style="color:var(--shiki-foreground)">(device_path)</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> fd </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> file</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">as_raw_fd</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    const</span><span style="color:var(--shiki-foreground)"> BLKRRPART</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> libc</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">c_ulong </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-constant)"> 0x125F</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> result </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-keyword)"> unsafe</span><span style="color:var(--shiki-foreground)"> { libc</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">ioctl</span><span style="color:var(--shiki-foreground)">(fd, BLKRRPART, </span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">) };</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    if</span><span style="color:var(--shiki-foreground)"> result </span><span style="color:var(--shiki-token-keyword)">!=</span><span style="color:var(--shiki-token-constant)"> 0</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        return</span><span style="color:var(--shiki-token-function)"> Err</span><span style="color:var(--shiki-foreground)">(std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Error</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">last_os_error</span><span style="color:var(--shiki-foreground)">());</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">    // 偷懒写法，更稳妥的做法是轮询等待分区节点出现，而不是盲等固定时间</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">thread</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">sleep</span><span style="color:var(--shiki-foreground)">(std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">time</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Duration</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">from_millis</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">500</span><span style="color:var(--shiki-foreground)">));</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    Ok</span><span style="color:var(--shiki-foreground)">(())</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h2 id="格式化分区" class="markdown-heading" data-heading="格式化分区" tabindex="-1"><a aria-label="link to this heading" aria-describedby="格式化分区" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%88%86%E5%8C%BA">#</a>格式化分区</h2><p>分区出来后，通常会格式化成 ext4，这里没有找到合适的 crate， 只能用命令了。</p><p>在这一步可以配置一下保留块比例。默认情况下，ext 系文件系统通常会给超级用户预留 5% 空间。系统盘上这很合理，但如果这块盘只是你的数据盘或缓存盘，默认值就未必划算了。</p><p>本文的采取的策略是：</p><ul class="has-list-bullet"><li><p><strong>数据盘</strong>：可以考虑 <code translate="no">-m 1</code></p></li><li><p><strong>缓存盘</strong>：可以考虑 <code translate="no">-m 0</code></p></li></ul><p>这不是硬规则，取决于实际情况要不要多拿一点可用空间。</p><p>具体代码如下：</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">process</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Command</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> format_ext4</span><span style="color:var(--shiki-foreground)">(partition_path</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">, reserved_percent</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> u8</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Result</span><span style="color:var(--shiki-foreground)">&lt;()&gt; {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> status </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> Command</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">new</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"mke2fs"</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">arg</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"-t"</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">arg</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"ext4"</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">arg</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"-F"</span><span style="color:var(--shiki-foreground)">)</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">arg</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"-m"</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">arg</span><span style="color:var(--shiki-foreground)">(reserved_percent</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">to_string</span><span style="color:var(--shiki-foreground)">())</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">arg</span><span style="color:var(--shiki-foreground)">(partition_path)</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">status</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    if</span><span style="color:var(--shiki-token-keyword)"> !</span><span style="color:var(--shiki-foreground)">status</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">success</span><span style="color:var(--shiki-foreground)">() {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        return</span><span style="color:var(--shiki-token-function)"> Err</span><span style="color:var(--shiki-foreground)">(std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Error</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">new</span><span style="color:var(--shiki-foreground)">(</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">ErrorKind</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Other</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-string-expression)">            "Format failed"</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        ));</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    Ok</span><span style="color:var(--shiki-foreground)">(())</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h2 id="挂载分区" class="markdown-heading" data-heading="挂载分区" tabindex="-1"><a aria-label="link to this heading" aria-describedby="挂载分区" href="#%E6%8C%82%E8%BD%BD%E5%88%86%E5%8C%BA">#</a>挂载分区</h2><p>挂载有一些选项，根据磁盘的用途来配置，对于本文的场景会用的下面的选项：</p><ul class="has-list-bullet"><li><p><code translate="no">noatime</code></p></li><li><p><code translate="no">nodiratime</code></p></li></ul><p>原因很简单：对于缓存来说访问时间基本没用，但每次读文件都去更新一次元数据，也有些开销。</p><p>代码如下：</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">use</span><span style="color:var(--shiki-foreground)"> nix</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">mount</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">{mount, </span><span style="color:var(--shiki-token-function)">MsFlags</span><span style="color:var(--shiki-foreground)">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> mount_disk</span><span style="color:var(--shiki-foreground)">(device</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">, target</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Result</span><span style="color:var(--shiki-foreground)">&lt;()&gt; {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">fs</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">create_dir_all</span><span style="color:var(--shiki-foreground)">(target)</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> flags </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> MsFlags</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">MS_NOATIME </span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-token-function)"> MsFlags</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">MS_NODIRATIME;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    mount</span><span style="color:var(--shiki-foreground)">(</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        Some</span><span style="color:var(--shiki-foreground)">(device),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        target,</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        Some</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"ext4"</span><span style="color:var(--shiki-foreground)">),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        flags,</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        None</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-token-function)">str</span><span style="color:var(--shiki-foreground)">&gt;,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    )</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    .</span><span style="color:var(--shiki-token-function)">map_err</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">e</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)"> std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">Error</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">new</span><span style="color:var(--shiki-foreground)">(std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">io</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">ErrorKind</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Other</span><span style="color:var(--shiki-foreground)">, e))</span><span style="color:var(--shiki-token-keyword)">?</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    Ok</span><span style="color:var(--shiki-foreground)">(())</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><p>如果更在意时间戳语义，也可以研究 <code translate="no">lazytime</code>。但对偏开发缓存、构建输出、数据隔离这类用途来说，先把 <code translate="no">atime</code> 写入关掉，收益已经很明显了。</p><h2 id="幂等性" class="markdown-heading" data-heading="幂等性" tabindex="-1"><a aria-label="link to this heading" aria-describedby="幂等性" href="#%E5%B9%82%E7%AD%89%E6%80%A7">#</a>幂等性</h2><p>为了防止意外被重新格式化，所以每个步骤要考虑幂等性</p><p>例如以下情况：</p><ul class="has-list-bullet"><li><p>有时候 VHDX 已经存在，但没挂进 WSL</p></li><li><p>有时候设备已经接入，但还没分区</p></li><li><p>有时候分区已经在了，但没格式化</p></li><li><p>有时候文件系统没问题，只是没挂载上</p></li></ul><p>如果每一步都带状态检查，就可以在启动时反复执行，而不用担心误伤已有数据。总之先检查，再执行；能跳过就跳。只有这样才能放心挂到自动化流程里。</p><h2 id="小结" class="markdown-heading" data-heading="小结" tabindex="-1"><a aria-label="link to this heading" aria-describedby="小结" href="#%E5%B0%8F%E7%BB%93">#</a>小结</h2><p>这篇的重点其实不是“如何调用某个 API”，而是把整条链路串起来：</p><ul class="has-list-bullet"><li><p>Windows 侧负责<strong>创建并接入磁盘</strong></p></li><li><p>Linux 侧负责<strong>识别、分区、格式化、挂载</strong></p></li><li><p>中间靠<strong>稳定标识</strong>把两边串起来</p></li><li><p>再用<strong>幂等性</strong>把它变成一个能重复运行的工具</p></li></ul><p>回头看，这里面真正值得记住的点就几个：</p><ol><li><p>创建 VHDX 需要管理员权限</p></li><li><p><code translate="no">wsl --mount --vhd --bare</code> 只是接入，不是最终挂载</p></li><li><p><code translate="no">/dev/sdX</code> 不稳定，自动化必须找唯一标识</p></li><li><p>写完分区表后，要记得通知内核重扫</p></li><li><p>格式化和挂载都值得顺手做一点参数调优</p></li><li><p>能直接复用系统稳定能力的地方，优先复用</p></li></ol><p>剩下的，其实就是把这些点老老实实写进代码里。</p></article><noscript><style>.toc-panel nav { display: block; }.toc-toggle { display: none; }.toc-title { display: block; }</style></noscript></div><div class="post-metadata"><div class="post-meta-row" aria-label="文章分类"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><a class="post-category-link" href="/categories/%E8%AE%B0%E5%BD%95/">记录</a></div><div class="post-meta-row" aria-label="文章统计"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/>
+<path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+<path d="M10 9H8"/>
+<path d="M16 13H8"/>
+<path d="M16 17H8"/></svg><span class="post-word-count" aria-label="字数统计">5451 Words</span></div></div><nav class="post-navigation" aria-label="文章导航"><p class="post-navigation-item"><span class="post-navigation-label" aria-hidden="true">上一篇：</span><a class="post-navigation-link" href="/posts/2026-02-17-新年快乐/" rel="prev" aria-label="上一篇：新年快乐">新年快乐</a></p><p class="post-navigation-item next"><span class="post-navigation-label" aria-hidden="true">下一篇：</span><a class="post-navigation-link" href="/posts/2026-03-08-记录一次前端项目和 deno 共享 schema 类型为 any 的问题/" rel="next" aria-label="下一篇：记录一次前端项目和 deno 共享 schema 类型为 any 的问题">记录一次前端项目和 deno 共享 schema 类型为 any 的问题</a></p></nav><div class="comments" id="comment" aria-label="文章评论" data-astro-cid-nuen6n26><button class="load-comments" type="button" aria-label="加载评论区" data-astro-cid-nuen6n26><span data-astro-cid-nuen6n26>載入評論</span></button></div><script type="module" src="/assets/Comments.astro_astro_type_script_index_0_lang.CxArsHF6.js"></script></main></div><footer data-astro-transition-scope="astro-jregkupr-6" class="site-footer" role="contentinfo" aria-label="网站页脚" data-astro-cid-fn43irff><div class="footer-copy" data-astro-cid-fn43irff><p class="footer-signature" aria-label="个性签名" data-astro-cid-fn43irff>每一份未兑现的承诺都存在着代价</p><p class="footer-details" aria-label="版权、协议与社交信息" data-astro-cid-fn43irff><span data-astro-cid-fn43irff>&copy; <time data-astro-cid-fn43irff>2026</time><a href="/about/" data-astro-cid-fn43irff>拂若華</a></span><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" aria-label="查看知识共享署名 4.0 协议" rel="license" title="本作品采用 CC BY 4.0 许可" data-astro-cid-fn43irff>CC BY-NC 4.0</a><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="/rss.xml" target="_blank" title="rss" aria-label="订阅本站 RSS 源" type="application/rss+xml" data-astro-cid-fn43irff><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-icon" data-astro-cid-fn43irff><path d="M4 11a9 9 0 0 1 9 9" data-astro-cid-fn43irff></path><path d="M4 4a16 16 0 0 1 16 16" data-astro-cid-fn43irff></path><circle cx="5" cy="19" r="1" data-astro-cid-fn43irff></circle></svg></a><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="https://github.com/tonitrnel" target="_blank" title="github" aria-label="访问作者 GitHub 主页" rel="me noopener noreferrer" data-astro-cid-fn43irff><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-icon" data-astro-cid-fn43irff><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" data-astro-cid-fn43irff></path><path d="M9 18c-4.51 2-5-2-7-2" data-astro-cid-fn43irff></path></svg></a></p></div></footer><!-- build date: 2026-09-10T02:44:17.286Z ᓚᘏᗢ--></body></html><!-- Keep article layout available at first paint, including during development. --><style>
+  .post-opening-with-cover {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr);
+    align-items: center;
+    gap: 3rem;
+    width: min(calc(100vw - 4rem), 54rem);
+    margin-inline: calc((100% - min(calc(100vw - 4rem), 54rem)) / 2);
+    padding-block: 1rem 3rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1rem;
+  }
+  .post-cover {
+    grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
+  }
+  .post-cover-image {
+    display: block;
+    height: 310px;
+    object-fit: cover;
+    width: 100%;
+  }
+  .post-heading {
+    position: relative;
+  }
+  .post-heading-with-cover {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: 1rem;
+  }
+  .post-heading-with-cover .post-published {
+    order: 1;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    opacity: 1;
+    font-weight: 400;
+  }
+  .post-heading-with-cover .md-title {
+    font-size: clamp(2rem, 3.3vw, 2.65rem);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: 0.035em;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    text-wrap: balance;
+  }
+  @media (max-width: 700px) {
+    .post-opening-with-cover {
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+      margin-inline: 0;
+      gap: 2rem;
+      padding-block: 0 2rem;
+    }
+    .post-cover {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .post-cover-image {
+      height: auto;
+      max-height: 260px;
+    }
+    .post-heading-with-cover {
+      padding-block: 0;
+    }
+    .post-heading-with-cover .md-title {
+      font-size: 2rem;
+    }
+  }
+  .post-published {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    opacity: 0.75;
+  }
+  .post-content {
+    margin-top: 2.5rem;
+    width: 100%;
+  }
+  .post-reading {
+    position: relative;
+    display: flow-root;
+  }
+  .post-metadata {
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    opacity: 0.85;
+  }
+  .post-tags,
+  .post-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .post-tags {
+    margin-top: 2rem;
+  }
+  .post-meta-row {
+    margin-block: 1rem;
+  }
+  .post-meta-icon {
+    margin-right: 0.5rem;
+  }
+  .post-tag-list {
+    display: flex;
+    gap: 0.75rem;
+    line-height: 1;
+  }
+  .post-category-link {
+    line-height: 1;
+    text-decoration: none;
+  }
+  .post-tag-link:hover,
+  .post-category-link:hover,
+  .post-navigation-link:hover {
+    text-decoration: underline;
+  }
+  .post-word-count {
+    padding-top: 0.125rem;
+    line-height: 1;
+  }
+  .post-modified {
+    font-style: italic;
+    span {
+      padding: 0 6px;
+    }
+  }
+  .post-navigation {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .post-navigation-item {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+  }
+  .post-navigation-item.next {
+    text-align: right;
+  }
+  .post-navigation-label {
+    opacity: 0.6;
+  }
+  .post-navigation-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+</style><style>
+  .md-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.06em;
+    margin: 0.6rem 0 1.2rem;
+    overflow-wrap: anywhere;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  .md-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 3px;
+    width: 4rem;
+    border-radius: 2px;
+    opacity: 0.8;
+    background: linear-gradient(90deg, var(--secondary) 0%, transparent 85%);
+  }
+</style>

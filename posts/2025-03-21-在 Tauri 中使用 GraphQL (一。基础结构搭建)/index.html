@@ -1,0 +1,572 @@
+<!DOCTYPE html><html data-astro-transition-scope="astro-yztbsuuz-2" class="theme-light" lang="zh-CN" data-astro-cid-ju4pidww><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#f6f5f0"><link href="/favicon.svg" rel="icon" type="image/svg+xml"><title>在 Tauri 中使用 GraphQL (一。基础结构搭建)</title><link rel="canonical" href="https://blog.ptdg.dev/posts/2025-03-21-%E5%9C%A8%20Tauri%20%E4%B8%AD%E4%BD%BF%E7%94%A8%20GraphQL%20(%E4%B8%80%E3%80%82%E5%9F%BA%E7%A1%80%E7%BB%93%E6%9E%84%E6%90%AD%E5%BB%BA)/"><meta name="title" content="在 Tauri 中使用 GraphQL (一。基础结构搭建)"><meta name="description" content="这是一个空白的画卷，我用其为未来制作一丝回忆"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"在 Tauri 中使用 GraphQL (一。基础结构搭建)","description":"这是一个空白的画卷，我用其为未来制作一丝回忆","author":{"@type":"Person","name":"拂若華"},"datePublished":"2025-03-21T09:40:35.000Z","keywords":"tauri, rust, graphql, sqlite","articleSection":"记录","wordCount":4310}</script><meta property="og:title" content="在 Tauri 中使用 GraphQL (一。基础结构搭建)"><meta property="og:description" content="这是一个空白的画卷，我用其为未来制作一丝回忆"><meta property="og:url" content="https://blog.ptdg.dev/posts/2025-03-21-%E5%9C%A8%20Tauri%20%E4%B8%AD%E4%BD%BF%E7%94%A8%20GraphQL%20(%E4%B8%80%E3%80%82%E5%9F%BA%E7%A1%80%E7%BB%93%E6%9E%84%E6%90%AD%E5%BB%BA)/"><meta property="og:type" content="article"><meta property="article:author" content="拂若華"><meta property="article:published_time" content="2025-03-21T09:40:35.000Z"><script>
+  (function () {
+    function applyTheme() {
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const storageTheme = sessionStorage.getItem('theme');
+      const isDark = storageTheme === 'dark' || (!storageTheme && isSystemDark);
+      const themeColor = document.head.children.namedItem('theme-color');
+      if (isDark) {
+        document.documentElement.classList.remove('theme-light');
+        document.documentElement.classList.add('theme-dark');
+        if (themeColor) themeColor.content = '#1b1b19';
+      } else {
+        document.documentElement.classList.remove('theme-dark');
+        document.documentElement.classList.add('theme-light');
+        if (themeColor) themeColor.content = '#f6f5f0';
+      }
+    }
+    applyTheme();
+    document.addEventListener('astro:after-swap', applyTheme);
+  })();
+</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/assets/ClientRouter.astro_astro_type_script_index_0_lang.Ckbx0Etl.js"></script><script type="module" src="/assets/Layout.astro_astro_type_script_index_0_lang.CHzLsb3o.js"></script><link rel="stylesheet" href="/assets/Renderer.BPQMiJuM.css"><link rel="stylesheet" href="/assets/Helmet.BYnb6_pI.css"><link rel="stylesheet" href="/assets/_slug_.BhOkEj1n.css"><style>[data-astro-transition-scope="astro-2uohob67-1"] { view-transition-name: post-title-0ae6ac4ba4364bee; }@layer astro { ::view-transition-old(post-title-0ae6ac4ba4364bee) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(post-title-0ae6ac4ba4364bee) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(post-title-0ae6ac4ba4364bee) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(post-title-0ae6ac4ba4364bee) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-2uohob67-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-2uohob67-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-yztbsuuz-2"] { view-transition-name: site-root; }@layer astro { ::view-transition-old(site-root) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(site-root) { animation: none; mix-blend-mode: normal; }::view-transition-group(site-root) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-yztbsuuz-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-yztbsuuz-2"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-yztbsuuz-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-yztbsuuz-2"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-jgduxsen-3"] { view-transition-name: page-content; }@layer astro { ::view-transition-old(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-out; }::view-transition-new(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-in; }[data-astro-transition=back]::view-transition-old(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-out; }[data-astro-transition=back]::view-transition-new(page-content) { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-in; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-out; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-in; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-out; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jgduxsen-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jgduxsen-3"] { 
+	animation-duration: 420ms;
+	animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+	animation-fill-mode: both;
+	animation-name: page-back-in; }</style><style>[data-astro-transition-scope="astro-f4pvgsiq-4"] { view-transition-name: feather-background; }@layer astro { ::view-transition-old(feather-background) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(feather-background) { animation: none; mix-blend-mode: normal; }::view-transition-group(feather-background) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-f4pvgsiq-4"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-f4pvgsiq-4"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-f4pvgsiq-4"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-f4pvgsiq-4"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-pcq43t4g-5"] { view-transition-name: site-header; }@layer astro { ::view-transition-old(site-header) { animation: none; opacity: 0; mix-blend-mode: normal; }::view-transition-new(site-header) { animation: none; mix-blend-mode: normal; }::view-transition-group(site-header) { animation: none } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-pcq43t4g-5"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-pcq43t4g-5"] { animation: none; mix-blend-mode: normal; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-pcq43t4g-5"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-pcq43t4g-5"] { animation: none; mix-blend-mode: normal; }</style><style>[data-astro-transition-scope="astro-jregkupr-6"] { view-transition-name: site-footer; }@layer astro { ::view-transition-old(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(site-footer) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jregkupr-6"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jregkupr-6"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head><body data-astro-cid-ju4pidww><raven-background class="feather-background" aria-hidden="true" data-astro-transition-scope="astro-f4pvgsiq-4" data-astro-transition-persist="feather-background" data-astro-cid-qz57aosd="true"><svg class="snow snow-right" viewBox="0 0 160 300" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#snow-right" data-astro-cid-qz57aosd></use></svg><svg class="snow snow-left" viewBox="0 0 100 180" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#snow-left" data-astro-cid-qz57aosd></use></svg><div class="feather-lane drifting-lane" data-astro-cid-qz57aosd><svg class="feather drifting" viewBox="0 0 120 320" fill="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#feather" data-astro-cid-qz57aosd></use></svg></div><div class="feather-lane fragment-lane" data-astro-cid-qz57aosd><svg class="feather fragment" viewBox="0 0 120 320" fill="none" xmlns="http://www.w3.org/2000/svg" data-astro-cid-qz57aosd><use href="/assets/decorations.BRH00zrr.svg#feather" data-astro-cid-qz57aosd></use></svg></div></raven-background><!-- Initialize before the first paint instead of waiting for the shared module. --><script>
+  (() => {
+    if (customElements.get('raven-background')) return;
+    // Native page loads must reuse the same arrangement as client navigation.
+    let seed = 1;
+    try {
+      const saved = Number(sessionStorage.getItem('feather-seed'));
+      seed = Number.isInteger(saved) && saved > 0 && saved < 2147483647
+        ? saved : Math.floor(Math.random() * 2147483646) + 1;
+      sessionStorage.setItem('feather-seed', String(seed));
+    } catch {
+      // A fixed seed keeps the background stable when storage is unavailable.
+      seed = 1;
+    }
+    const random = () => {
+      seed = seed * 16807 % 2147483647;
+      return (seed - 1) / 2147483646;
+    };
+    const arrangements = [0, 1].map((index) => ({
+      top: `${(index ? 60 : 15) + random() * (index ? 17 : 25)}%`,
+      angle: `${(index ? 35 : -28) + random() * 45 + (random() < .35 ? 180 : 0)}deg`,
+      scale: String((index ? .35 : .8) + random() * .18),
+      inset: `${-.5 + random()}rem`,
+      shape: ['full', 'slender', 'swept'][Math.floor(random() * 3)],
+    }));
+    customElements.define('raven-background', class extends HTMLElement {
+      connectedCallback() {
+        this.querySelectorAll('.feather').forEach((feather, index) => {
+          const arrangement = arrangements[index];
+          if (!arrangement) return;
+          for (const key of ['top', 'angle', 'scale', 'inset']) {
+            feather.style.setProperty(`--${key}`, arrangement[key]);
+          }
+          feather.dataset.shape = arrangement.shape;
+        });
+      }
+    });
+  })();
+</script><header data-astro-transition-scope="astro-pcq43t4g-5" class="header" role="banner" aria-label="网站页头"><div class="header-inner"><h1 class="header-title" aria-label="网站标题"><a href="/" class="site-brand" aria-label="返回首页"><svg class="brand-raven" viewBox="0 0 240 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><!-- A perched corvid, with a heavy bill and etched wing feathers. --><path d="M29 167 62 117C72 103 89 95 105 79L124 48C132 33 153 30 167 39L178 51 208 65 176 69C172 93 169 116 149 134L113 151 55 174 68 153Z" fill="currentColor"></path><path d="M111 89C91 110 80 130 64 153M123 92C109 113 96 132 80 145M134 94C124 114 113 130 99 139M145 94C140 111 133 124 121 131" stroke="var(--paper)" stroke-width="1.3" opacity=".48"></path><path d="m131 139 2 30 15 7m-15-7-10 7m25-40 8 31 15 6m-15-6-7 9" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="161" cy="52" r="2.5" fill="var(--paper)"></circle><path d="m180 60 19 5" stroke="var(--paper)" stroke-width="1" opacity=".6"></path><path d="M17 178c64-5 132 4 208-2" stroke="currentColor" stroke-width="1.2"></path></svg>繪畫世界</a></h1><nav class="nav-menu header-nav" aria-label="主导航菜单" role="navigation" data-astro-cid-xr2ojvak><ul class="nav-menu-list" aria-label="主导航菜单列表" role="list" data-astro-cid-xr2ojvak><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/posts/" class="nav-link is-active" itemprop="url" aria-current="page" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>文章</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/categories/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>分類</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/tags/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>標籤</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/projects/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>項目</a></li><li class="nav-menu-item" role="listitem" aria-label="主导航菜单项" data-astro-cid-xr2ojvak><a href="/about/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-xr2ojvak="true" data-astro-cid-hwj3apfd>關於</a></li></ul></nav><a class="icon-control header-action" href="/search/" aria-label="网站搜索" role="button" title="打开搜索"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><path d="m21 21-4.34-4.34"/>
+<circle cx="11" cy="11" r="8"/></svg></a><theme-control class="icon-control header-action" role="button" aria-label="切换主题配色" title="切换深色/浅色模式"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><circle cx="12" cy="12" r="4"/>
+<path d="M12 2v2"/>
+<path d="M12 20v2"/>
+<path d="m4.93 4.93 1.41 1.41"/>
+<path d="m17.66 17.66 1.41 1.41"/>
+<path d="M2 12h2"/>
+<path d="M20 12h2"/>
+<path d="m6.34 17.66-1.41 1.41"/>
+<path d="m19.07 4.93-1.41 1.41"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-fill"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></theme-control><mobile-nav class="mobile-nav" aria-label="移动导航"><button type="button" id="nav-menu-toggle" aria-label="打开导航菜单" aria-expanded="false" aria-controls="mobile-nav-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path class="menu-lines" d="M4 6h16M4 12h16M4 18h16"></path><path class="menu-close" d="m6 6 12 12M6 18 18 6"></path></svg></button><nav id="mobile-nav-menu" aria-label="移动导航菜单" hidden><ul class="mobile-nav-list"><li class="mobile-nav-item"><a href="/posts/" class="nav-link is-active" itemprop="url" aria-current="page" data-astro-cid-hwj3apfd>文章</a></li><li class="mobile-nav-item"><a href="/categories/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>分類</a></li><li class="mobile-nav-item"><a href="/tags/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>標籤</a></li><li class="mobile-nav-item"><a href="/projects/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>項目</a></li><li class="mobile-nav-item"><a href="/about/" class="nav-link" itemprop="url" aria-current="false" data-astro-cid-hwj3apfd>關於</a></li></ul></nav></mobile-nav></div></header><div data-astro-transition-scope="astro-jgduxsen-3" data-astro-cid-ju4pidww><main class="container post-page" role="main" aria-label="文章正文"><div class="post-opening"><header class="post-heading"><time class="post-published" datetime="2025-03-21T09:40:35.000Z" aria-label="发布日期">2025年3月21日</time><h1 class="md-title" aria-label="文章标题"><span data-astro-transition-scope="astro-2uohob67-1" class="transition-title">在 Tauri 中使用 GraphQL (一。基础结构搭建)</span></h1></header></div><div class="post-reading"><post-toc><aside class="toc-sidebar" aria-label="文章目录"><div class="toc-panel"><span class="toc-title">本文目录</span><button type="button" class="toc-toggle" aria-expanded="false" aria-controls="post-toc-links"><span>本文目录</span><span class="toc-chevron" aria-hidden="true">⌄</span></button><nav id="post-toc-links" aria-label="文章标题导航"><ol><li><a href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87" style="--depth: 0">目录结构和上下文</a></li><li><a href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%98%A0%E5%B0%84" style="--depth: 0">数据类型映射</a></li><li><a href="#%E5%AE%9E%E7%8E%B0%20CustomScalarValue" style="--depth: 1">实现 CustomScalarValue</a></li><li><a href="#%E5%AE%9E%E7%8E%B0%20Integer" style="--depth: 1">实现 Integer</a></li><li><a href="#%E5%AE%9E%E7%8E%B0%20Timestamp" style="--depth: 1">实现 Timestamp</a></li><li><a href="#%E5%AE%9E%E7%8E%B0%20ID" style="--depth: 1">实现 ID</a></li><li><a href="#%E5%AE%9E%E7%8E%B0%20Boolean" style="--depth: 1">实现 Boolean</a></li><li><a href="#%E5%88%9B%E5%BB%BA%20graphql%20%E5%91%BD%E4%BB%A4%E5%85%A5%E5%8F%A3" style="--depth: 0">创建 graphql 命令入口</a></li><li><a href="#%E5%88%9B%E5%BB%BA%20GraphQL%20Schema" style="--depth: 1">创建 GraphQL Schema</a></li><li><a href="#%E5%88%9B%E5%BB%BA%20Context" style="--depth: 1">创建 Context</a></li><li><a href="#%E5%88%9B%E5%BB%BA%E5%91%BD%E4%BB%A4" style="--depth: 1">创建命令</a></li></ol></nav></div></aside></post-toc><article class="md-content post-content" aria-label="文章内容"><p>emmm，我或许是有点疯了，不过 Tauri 的 commands 定义还是挺难受了除了这一点还有类型、文档，那么为什么不引入 GraphQL 呢？它具备类型，文档，因所有请求都是同一路径，也能和 Tauri 搭配了，除了依赖 WebSocket 的 <code translate="no">Subscription</code>。</p><p>下面基于 <a href="https://github.com/graphql-rust/juniper" rel="noonpener" class="external-link" target="_blank">Juniper</a> 和 <a href="https://github.com/launchbadge/sqlx" rel="noonpener" class="external-link" target="_blank">SQLx</a> 以及 SQLite 进行实现</p><h2 id="目录结构和上下文" class="markdown-heading" data-heading="目录结构和上下文" tabindex="-1"><a aria-label="link to this heading" aria-describedby="目录结构和上下文" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87">#</a>目录结构和上下文</h2><p>GraphQL 上下文不同于 Tauri 的上下文，Tauri 的上下文一般是全局的，而 GraphQL 的上下文是针对每次连接的。</p><p>因此一般在 Tauri 的上下文存储 sqlx 的 pool 和 GraphQL Schema，然后在 GraphQL 的上下文存储 sqlite pool 的克隆，以及一些 repository 和 loader。</p><p>整体文件结构目录如下</p><div class="code-block"><pre class="shiki highlighting language-text" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="text"><code class="language-text"><span class="line"><span>src-tauri/</span></span>
+<span class="line"><span>├─ commands/</span></span>
+<span class="line"><span>│  ├─ graphql.rs</span></span>
+<span class="line"><span>│  ├─ mod.rs</span></span>
+<span class="line"><span>├─ graphql/</span></span>
+<span class="line"><span>│  ├─ loaders/</span></span>
+<span class="line"><span>│  ├─ relay/</span></span>
+<span class="line"><span>│  ├─ context.rs</span></span>
+<span class="line"><span>│  ├─ mod.rs</span></span>
+<span class="line"><span>│  ├─ scalar.rs</span></span>
+<span class="line"><span>│  ├─ schema.rs</span></span>
+<span class="line"><span>├─ lib.rs</span></span>
+<span class="line"><span>├─ main.rs</span></span>
+<span class="line"><span>├─ state.rs</span></span></code></pre><button class="copy-code-button">copy</button></div><p id="block-directory-structure"></p><h2 id="数据类型映射" class="markdown-heading" data-heading="数据类型映射" tabindex="-1"><a aria-label="link to this heading" aria-describedby="数据类型映射" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%98%A0%E5%B0%84">#</a>数据类型映射</h2><p>SQLite 的 自增 <code translate="no">INTEGER</code> ID 在 Rust SQLX 库中用的 <code translate="no">i64</code> 表示，我们需要进行转换一下，因为 GraphQL/Juniper 只支持 <code translate="no">i32</code> 和 <code translate="no">f64</code>，除此之外还有 <code translate="no">Timestamp</code> 和 <code translate="no">Boolean</code>, 这两个在 SQLite 并没有对应的类型因此均基于 <code translate="no">i64</code> 作为原始类型进行包装。</p><p>哦，还有一个 <code translate="no">Integer</code> ，对于它我们直接把它转为 <code translate="no">i32</code> 使用。</p><p>为了 <code translate="no">Integer</code> 在 SQLx 中方便的转换，我们不能对它进行包装，否则 <code translate="no">query_as!</code> 宏无法将 <code translate="no">Option&lt;i64&gt;</code> 转换为 <code translate="no">Option&lt;Integer&gt;</code>，尽管可以通过 <a href="https://docs.rs/sqlx/latest/sqlx/macro.query_as.html#column-type-override-infer-from-struct-field" rel="noonpener" class="external-link" target="_blank">Column Type Override</a> 对目标列修改为特定类型但还是增加繁琐性，SQLx 能否支持如果是 <code translate="no">Option</code> 则进行 <code translate="no">xxx.map(Into)</code> ?</p><p>在 <code translate="no">graphql/scalar.rs</code> 文件中编写 <code translate="no">Integer</code> 、<code translate="no">ID</code>、<code translate="no">Timestamp</code> 的代码</p><h3 id="实现 CustomScalarValue" class="markdown-heading" data-heading="实现 CustomScalarValue" tabindex="-1"><a aria-label="link to this heading" aria-describedby="实现 CustomScalarValue" href="#%E5%AE%9E%E7%8E%B0%20CustomScalarValue">#</a>实现 <code translate="no">CustomScalarValue</code></h3><p>首先编写一个 <code translate="no">CustomScalarValue</code>，它是 <code translate="no">DefaultScalarValue</code> 的复制，这样做只是为了为 <code translate="no">i64</code> 实现自定义的标量。参考 <a href="https://graphql-rust.github.io/juniper/types/scalars.html#foreign" rel="noonpener" class="external-link" target="_blank">Foreign scalars</a></p><p><code translate="no">DefaultScalarValue</code> 定义在 juniper crate 的 <code translate="no">src/value/scalar.rs</code> 文件内，我们将它复制出来然后重命名为 <code translate="no">CustomScalarValue</code></p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-foreground)">#[derive(</span><span style="color:var(--shiki-token-function)">Clone</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Debug</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">PartialEq</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">ScalarValue</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Serialize</span><span style="color:var(--shiki-foreground)">)]  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">#[serde(untagged)]</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> enum</span><span style="color:var(--shiki-token-function)"> CustomScalarValue</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    #[value(as_float, as_int)]  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    Int</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">i32</span><span style="color:var(--shiki-foreground)">),  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    #[value(as_float)]  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    Float</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">f64</span><span style="color:var(--shiki-foreground)">),  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    #[value(as_str, as_string, into_string)]  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    String</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">),  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    #[value(as_bool)]  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    Boolean</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">bool</span><span style="color:var(--shiki-foreground)">),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="实现 Integer" class="markdown-heading" data-heading="实现 Integer" tabindex="-1"><a aria-label="link to this heading" aria-describedby="实现 Integer" href="#%E5%AE%9E%E7%8E%B0%20Integer">#</a>实现 <code translate="no">Integer</code></h3><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-foreground)">#[graphql_scalar]  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">#[graphql(  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    with </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> integer_scalar,  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    parse_token(</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">),  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    scalar </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> CustomScalarValue</span><span style="color:var(--shiki-foreground)">  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">)]</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> type</span><span style="color:var(--shiki-token-function)"> Integer</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-token-function)"> i64</span><span style="color:var(--shiki-foreground)">;</span></span></code></pre><button class="copy-code-button">copy</button></div><p>然后为它实现输入输出处理逻辑</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">mod</span><span style="color:var(--shiki-foreground)"> integer_scalar {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    use</span><span style="color:var(--shiki-foreground)"> super</span><span style="color:var(--shiki-token-keyword)">::*</span><span style="color:var(--shiki-foreground)">;  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-foreground)">(super) </span><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> to_output</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> ScalarValue</span><span style="color:var(--shiki-foreground)">&gt;(v</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">Integer</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Value</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-foreground)">&gt; {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">        // 直接强制转为更小的类型  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        Value</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Scalar</span><span style="color:var(--shiki-foreground)">((</span><span style="color:var(--shiki-token-keyword)">*</span><span style="color:var(--shiki-foreground)">v </span><span style="color:var(--shiki-token-keyword)">as</span><span style="color:var(--shiki-token-function)"> i32</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">into</span><span style="color:var(--shiki-foreground)">())  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-foreground)">(super) </span><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> from_input</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> ScalarValue</span><span style="color:var(--shiki-foreground)">&gt;(v</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">InputValue</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-foreground)">&gt;) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Result</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Integer</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">&gt; {  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        v</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">as_string_value</span><span style="color:var(--shiki-foreground)">()  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            .</span><span style="color:var(--shiki-token-function)">ok_or_else</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">||</span><span style="color:var(--shiki-token-function)"> format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"Expected `Int`, found: {v}"</span><span style="color:var(--shiki-foreground)">))  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            .</span><span style="color:var(--shiki-token-function)">and_then</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">s</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-token-keyword)"> match</span><span style="color:var(--shiki-foreground)"> s</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">parse</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">i64</span><span style="color:var(--shiki-foreground)">&gt;() {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">                Ok</span><span style="color:var(--shiki-foreground)">(i) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-token-function)"> Ok</span><span style="color:var(--shiki-foreground)">(i),  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">                Err</span><span style="color:var(--shiki-foreground)">(e) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-token-function)"> Err</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"{e}"</span><span style="color:var(--shiki-foreground)">)),  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            })  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="实现 Timestamp" class="markdown-heading" data-heading="实现 Timestamp" tabindex="-1"><a aria-label="link to this heading" aria-describedby="实现 Timestamp" href="#%E5%AE%9E%E7%8E%B0%20Timestamp">#</a>实现 <code translate="no">Timestamp</code></h3><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-foreground)">#[derive(</span><span style="color:var(--shiki-token-function)">Debug</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Copy</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">GraphQLScalar</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Clone</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Eq</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">PartialEq</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Serialize</span><span style="color:var(--shiki-foreground)">, sqlx</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Type</span><span style="color:var(--shiki-foreground)">)]  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">#[graphql(  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    with </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> timestamp_scalar,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    parse_token(</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">)]  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> struct</span><span style="color:var(--shiki-token-function)"> Timestamp</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">i64</span><span style="color:var(--shiki-foreground)">);</span></span></code></pre><button class="copy-code-button">copy</button></div><p>由于 GraphQL 不支持 <code translate="no">i64</code>，因此将其转为 <a href="https://www.rfc-editor.org/rfc/rfc3339" rel="noonpener" class="external-link" target="_blank">rfc3339</a> 字符串形式，这里引入 chrono crate 来处理</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">mod</span><span style="color:var(--shiki-foreground)"> timestamp_scalar {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    use</span><span style="color:var(--shiki-foreground)"> super</span><span style="color:var(--shiki-token-keyword)">::*</span><span style="color:var(--shiki-foreground)">;  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    use</span><span style="color:var(--shiki-foreground)"> chrono</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">{</span><span style="color:var(--shiki-token-function)">DateTime</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Utc</span><span style="color:var(--shiki-foreground)">};  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-foreground)">(super) </span><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> to_output</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> ScalarValue</span><span style="color:var(--shiki-foreground)">&gt;(v</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">Timestamp</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Value</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-foreground)">&gt; {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        Value</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Scalar</span><span style="color:var(--shiki-foreground)">(  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            DateTime</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Utc</span><span style="color:var(--shiki-foreground)">&gt;</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">from_timestamp</span><span style="color:var(--shiki-foreground)">(v</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">)  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                .</span><span style="color:var(--shiki-token-function)">unwrap</span><span style="color:var(--shiki-foreground)">()  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                .</span><span style="color:var(--shiki-token-function)">to_rfc3339</span><span style="color:var(--shiki-foreground)">()  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                .</span><span style="color:var(--shiki-token-function)">into</span><span style="color:var(--shiki-foreground)">(),  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        )  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-foreground)">(super) </span><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> from_input</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> ScalarValue</span><span style="color:var(--shiki-foreground)">&gt;(v</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">InputValue</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-foreground)">&gt;) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Result</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Timestamp</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">&gt; {  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        v</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">as_string_value</span><span style="color:var(--shiki-foreground)">()  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            .</span><span style="color:var(--shiki-token-function)">ok_or_else</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">||</span><span style="color:var(--shiki-token-function)"> format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"Expected `Timestamp`, found {v}"</span><span style="color:var(--shiki-foreground)">))  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            .</span><span style="color:var(--shiki-token-function)">and_then</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">s</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-token-keyword)"> match</span><span style="color:var(--shiki-foreground)"> DateTime</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">parse_from_rfc3339</span><span style="color:var(--shiki-foreground)">(s) {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">                Ok</span><span style="color:var(--shiki-foreground)">(dt) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-token-function)"> Ok</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">Timestamp</span><span style="color:var(--shiki-foreground)">(dt</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">timestamp</span><span style="color:var(--shiki-foreground)">())),  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">                Err</span><span style="color:var(--shiki-foreground)">(e) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-token-function)"> Err</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"{e}"</span><span style="color:var(--shiki-foreground)">)),  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            })  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="实现 ID" class="markdown-heading" data-heading="实现 ID" tabindex="-1"><a aria-label="link to this heading" aria-describedby="实现 ID" href="#%E5%AE%9E%E7%8E%B0%20ID">#</a>实现 ID</h3><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-foreground)">#[derive(</span><span style="color:var(--shiki-token-function)">Debug</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Copy</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Hash</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">GraphQLScalar</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Clone</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Eq</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">PartialEq</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Serialize</span><span style="color:var(--shiki-foreground)">, sqlx</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Type</span><span style="color:var(--shiki-foreground)">)]  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">#[graphql(with </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> id_scalar, parse_token(</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">))]  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> struct</span><span style="color:var(--shiki-token-function)"> ID</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">i64</span><span style="color:var(--shiki-foreground)">);</span></span></code></pre><button class="copy-code-button">copy</button></div><p>对于 ID 也将其转换 <code translate="no">String</code></p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">mod</span><span style="color:var(--shiki-foreground)"> id_scalar {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    use</span><span style="color:var(--shiki-foreground)"> super</span><span style="color:var(--shiki-token-keyword)">::*</span><span style="color:var(--shiki-foreground)">;  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-foreground)">(super) </span><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> to_output</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> ScalarValue</span><span style="color:var(--shiki-foreground)">&gt;(v</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-foreground)">ID) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Value</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-foreground)">&gt; {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        let</span><span style="color:var(--shiki-foreground)"> value </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> base64_url</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">encode</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">v</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-token-punctuation)">.</span><span style="color:var(--shiki-token-function)">to_be_bytes</span><span style="color:var(--shiki-foreground)">());  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        Value</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Scalar</span><span style="color:var(--shiki-foreground)">(value</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">into</span><span style="color:var(--shiki-foreground)">())  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-foreground)">(super) </span><span style="color:var(--shiki-token-keyword)">fn</span><span style="color:var(--shiki-token-function)"> from_input</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> ScalarValue</span><span style="color:var(--shiki-foreground)">&gt;(v</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-token-function)">InputValue</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">S</span><span style="color:var(--shiki-foreground)">&gt;) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Result</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">ID</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">&gt; {  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        v</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">as_string_value</span><span style="color:var(--shiki-foreground)">()  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            .</span><span style="color:var(--shiki-token-function)">ok_or_else</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">||</span><span style="color:var(--shiki-token-function)"> format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"Expected `String`, found: {v}"</span><span style="color:var(--shiki-foreground)">))  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">            .</span><span style="color:var(--shiki-token-function)">and_then</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">s</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)"> {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                match</span><span style="color:var(--shiki-foreground)"> base64_url</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">decode</span><span style="color:var(--shiki-foreground)">(s)  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                    .</span><span style="color:var(--shiki-token-function)">map_err</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">e</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-token-function)"> format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"{e}"</span><span style="color:var(--shiki-foreground)">))  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                    .</span><span style="color:var(--shiki-token-function)">and_then</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">b</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)"> b</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">try_into</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">map_err</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-foreground)">_e</span><span style="color:var(--shiki-token-keyword)">|</span><span style="color:var(--shiki-token-string-expression)"> "Invalid byte length"</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">to_string</span><span style="color:var(--shiki-foreground)">()))  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">                    .</span><span style="color:var(--shiki-token-function)">map</span><span style="color:var(--shiki-foreground)">(i64</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">from_be_bytes)  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">                {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">                    Ok</span><span style="color:var(--shiki-foreground)">(v) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-token-function)"> Ok</span><span style="color:var(--shiki-foreground)">(ID(v)),  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">                    Err</span><span style="color:var(--shiki-foreground)">(e) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-token-function)"> Err</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"Invalid ID, {e}"</span><span style="color:var(--shiki-foreground)">)),  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">                }  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">            })  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="实现 Boolean" class="markdown-heading" data-heading="实现 Boolean" tabindex="-1"><a aria-label="link to this heading" aria-describedby="实现 Boolean" href="#%E5%AE%9E%E7%8E%B0%20Boolean">#</a><del>实现 Boolean</del></h3><p>突然发现 SQLite 存在 <code translate="no">Boolean</code> 类型，该类型没有实现的必要了</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-foreground)">#[derive(</span><span style="color:var(--shiki-token-function)">Debug</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Clone</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Copy</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">GraphQLScalar</span><span style="color:var(--shiki-foreground)">)]  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">#[graphql(transparent)]  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> struct</span><span style="color:var(--shiki-token-function)"> Boolean</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">bool</span><span style="color:var(--shiki-foreground)">);</span></span></code></pre><button class="copy-code-button">copy</button></div><p><code translate="no">Boolean</code> 主要针对 SQLx 做一些处理，GraphQL 支持 <code translate="no">boolean</code> 值，因此标记为 <code translate="no">GraphQLScalar</code> 就可以了</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">impl</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">q</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-function)">Encode</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">q</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Sqlite</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-keyword)">for</span><span style="color:var(--shiki-token-function)"> Boolean</span><span style="color:var(--shiki-foreground)"> {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    fn</span><span style="color:var(--shiki-token-function)"> encode_by_ref</span><span style="color:var(--shiki-foreground)">(  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        &amp;</span><span style="color:var(--shiki-foreground)">self,  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        buf</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;mut</span><span style="color:var(--shiki-foreground)"> &lt;</span><span style="color:var(--shiki-token-function)">Sqlite</span><span style="color:var(--shiki-token-keyword)"> as</span><span style="color:var(--shiki-token-function)"> Database</span><span style="color:var(--shiki-foreground)">&gt;</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">ArgumentBuffer</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">q</span><span style="color:var(--shiki-foreground)">&gt;,  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    ) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Result</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">IsNull</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">BoxDynError</span><span style="color:var(--shiki-foreground)">&gt; {  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        &lt;</span><span style="color:var(--shiki-token-function)">bool</span><span style="color:var(--shiki-token-keyword)"> as</span><span style="color:var(--shiki-token-function)"> Encode</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">q</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Sqlite</span><span style="color:var(--shiki-foreground)">&gt;&gt;</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">encode_by_ref</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">self</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">, buf)  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">impl</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">r</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-function)">Decode</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">r</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Sqlite</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-keyword)">for</span><span style="color:var(--shiki-token-function)"> Boolean</span><span style="color:var(--shiki-foreground)"> {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    fn</span><span style="color:var(--shiki-token-function)"> decode</span><span style="color:var(--shiki-foreground)">(value</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> SqliteValueRef</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">r</span><span style="color:var(--shiki-foreground)">&gt;) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Result</span><span style="color:var(--shiki-foreground)">&lt;Self, </span><span style="color:var(--shiki-token-function)">BoxDynError</span><span style="color:var(--shiki-foreground)">&gt; {  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        &lt;</span><span style="color:var(--shiki-token-function)">bool</span><span style="color:var(--shiki-token-keyword)"> as</span><span style="color:var(--shiki-token-function)"> Decode</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">r</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Sqlite</span><span style="color:var(--shiki-foreground)">&gt;&gt;</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">decode</span><span style="color:var(--shiki-foreground)">(value)</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">map</span><span style="color:var(--shiki-foreground)">(Boolean</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">from)  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">impl</span><span style="color:var(--shiki-token-function)"> Type</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Sqlite</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-keyword)">for</span><span style="color:var(--shiki-token-function)"> Boolean</span><span style="color:var(--shiki-foreground)"> {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    fn</span><span style="color:var(--shiki-token-function)"> type_info</span><span style="color:var(--shiki-foreground)">() </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> SqliteTypeInfo</span><span style="color:var(--shiki-foreground)"> {  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        &lt;</span><span style="color:var(--shiki-token-function)">i64</span><span style="color:var(--shiki-token-keyword)"> as</span><span style="color:var(--shiki-token-function)"> Type</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Sqlite</span><span style="color:var(--shiki-foreground)">&gt;&gt;</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">type_info</span><span style="color:var(--shiki-foreground)">()  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    fn</span><span style="color:var(--shiki-token-function)"> compatible</span><span style="color:var(--shiki-foreground)">(ty</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-keyword)"> &amp;</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Sqlite</span><span style="color:var(--shiki-token-keyword)"> as</span><span style="color:var(--shiki-token-function)"> Database</span><span style="color:var(--shiki-foreground)">&gt;</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">TypeInfo</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> bool</span><span style="color:var(--shiki-foreground)"> {  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        &lt;</span><span style="color:var(--shiki-token-function)">i64</span><span style="color:var(--shiki-token-keyword)"> as</span><span style="color:var(--shiki-token-function)"> Type</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Sqlite</span><span style="color:var(--shiki-foreground)">&gt;&gt;</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">compatible</span><span style="color:var(--shiki-foreground)">(ty)  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h2 id="创建 graphql 命令入口" class="markdown-heading" data-heading="创建 graphql 命令入口" tabindex="-1"><a aria-label="link to this heading" aria-describedby="创建 graphql 命令入口" href="#%E5%88%9B%E5%BB%BA%20graphql%20%E5%91%BD%E4%BB%A4%E5%85%A5%E5%8F%A3">#</a>创建 <code translate="no">graphql</code> 命令入口</h2><p>在创建命令前我们需要定义 Schema 和 Context 的结构</p><h3 id="创建 GraphQL Schema" class="markdown-heading" data-heading="创建 GraphQL Schema" tabindex="-1"><a aria-label="link to this heading" aria-describedby="创建 GraphQL Schema" href="#%E5%88%9B%E5%BB%BA%20GraphQL%20Schema">#</a>创建 GraphQL Schema</h3><p>首先在 <code translate="no">graphql/schema.rs</code> 中创建 schema</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> struct</span><span style="color:var(--shiki-token-function)"> Query</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">#[graphql_object]  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">#[graphql(context </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> Context</span><span style="color:var(--shiki-foreground)">, scalar </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> scalar</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">CustomScalarValue</span><span style="color:var(--shiki-foreground)">)]</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">impl</span><span style="color:var(--shiki-token-function)"> Query</span><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> greet</span><span style="color:var(--shiki-foreground)">(name</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> String</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> String</span><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">        format!</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"Hello, {}! You've been greeted from Rust!"</span><span style="color:var(--shiki-foreground)">, name)</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> struct</span><span style="color:var(--shiki-token-function)"> Mutation</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">#[graphql_object]  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">#[graphql(context </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> Context</span><span style="color:var(--shiki-foreground)">, scalar </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> scalar</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">CustomScalarValue</span><span style="color:var(--shiki-foreground)">)]  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">impl</span><span style="color:var(--shiki-token-function)"> Mutation</span><span style="color:var(--shiki-foreground)"> {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> add</span><span style="color:var(--shiki-foreground)">(a</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> i32</span><span style="color:var(--shiki-foreground)">, b</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> i32</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> i32</span><span style="color:var(--shiki-foreground)"> {  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        a </span><span style="color:var(--shiki-token-keyword)">+</span><span style="color:var(--shiki-foreground)"> b  </span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> type</span><span style="color:var(--shiki-token-function)"> Schema</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-foreground)">  </span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    RootNode</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">static</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Query</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Mutation</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">EmptySubscription</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Context</span><span style="color:var(--shiki-foreground)">&gt;, scalar</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">CustomScalarValue</span><span style="color:var(--shiki-foreground)">&gt;;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> create_schema</span><span style="color:var(--shiki-foreground)">() </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Schema</span><span style="color:var(--shiki-foreground)"> {  </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> schema </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-function)"> Schema</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">new_with_scalar_value</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-function)">Query</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Mutation</span><span style="color:var(--shiki-foreground)">, EmptySubscription</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">new</span><span style="color:var(--shiki-foreground)">());</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    #[cfg(debug_assertions)]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    {</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">      // 每次启动时输出 schema 到文件</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      let</span><span style="color:var(--shiki-foreground)"> path </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-keyword)"> ...</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">      std</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">fs</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">write</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">path, schema</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">as_sdl</span><span style="color:var(--shiki-foreground)">())</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">unwrap</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    schema</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="创建 Context" class="markdown-heading" data-heading="创建 Context" tabindex="-1"><a aria-label="link to this heading" aria-describedby="创建 Context" href="#%E5%88%9B%E5%BB%BA%20Context">#</a>创建 Context</h3><p>首先在 <code translate="no">state.rs</code> 中定义数据库的连接和 GraphQL Schema</p><p><code translate="no">SqlitePool</code> 内部使用了 <code translate="no">Arc</code> 因此不需要使用 <code translate="no">Arc</code> , <code translate="no">graphql::Schema</code> 后面只用到其引用，因此也无需使用 <code translate="no">Arc</code></p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> struct</span><span style="color:var(--shiki-token-function)"> AppState</span><span style="color:var(--shiki-foreground)"> {&nbsp; &nbsp; </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-foreground)"> pool</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> SqlitePool</span><span style="color:var(--shiki-foreground)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">&nbsp; &nbsp; pub</span><span style="color:var(--shiki-foreground)"> schema</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> graphql</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Schema</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> build_app_state</span><span style="color:var(--shiki-foreground)">(pool</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> SqlitePool</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> AppState</span><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">    AppState</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        pool,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        schema</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> graphql</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">create_schema</span><span style="color:var(--shiki-foreground)">(),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><p>然后在 <code translate="no">graphql/context.rs</code> 中定义 GraphQL 的上下文</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> struct</span><span style="color:var(--shiki-token-function)"> Context</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">    // 这里除了存储数据库连接外还用于存储 service 或 repository </span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    pub</span><span style="color:var(--shiki-foreground)"> pool</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> SqlitePool</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">impl</span><span style="color:var(--shiki-token-function)"> Context</span><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> new</span><span style="color:var(--shiki-foreground)">(pool</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> SqlitePool</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-foreground)"> Self {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">      Self { pool }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">impl</span><span style="color:var(--shiki-foreground)"> juniper</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Context</span><span style="color:var(--shiki-token-keyword)"> for</span><span style="color:var(--shiki-token-function)"> Context</span><span style="color:var(--shiki-foreground)"> {}</span></span></code></pre><button class="copy-code-button">copy</button></div><h3 id="创建命令" class="markdown-heading" data-heading="创建命令" tabindex="-1"><a aria-label="link to this heading" aria-describedby="创建命令" href="#%E5%88%9B%E5%BB%BA%E5%91%BD%E4%BB%A4">#</a>创建命令</h3><p>在 <code translate="no">commands/graphql.rs</code> 中声明 <code translate="no">graphql</code> 命令</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-foreground)">#[command]</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> async</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> graphql</span><span style="color:var(--shiki-foreground)">(</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    state</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> tauri</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">State</span><span style="color:var(--shiki-foreground)">&lt;'</span><span style="color:var(--shiki-token-function)">_</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">AppState</span><span style="color:var(--shiki-foreground)">&gt;,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    body</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> GraphQLRequest</span><span style="color:var(--shiki-foreground)">&lt;scalar</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">CustomScalarValue</span><span style="color:var(--shiki-foreground)">&gt;,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">-&gt;</span><span style="color:var(--shiki-token-function)"> Result</span><span style="color:var(--shiki-foreground)">&lt;serde_json</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Value</span><span style="color:var(--shiki-foreground)">, serde_json</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Value</span><span style="color:var(--shiki-foreground)">&gt; {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> pool </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> state</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-foreground)">pool</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">clone</span><span style="color:var(--shiki-foreground)">();</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> context </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> graphql</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Context</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">new</span><span style="color:var(--shiki-foreground)">(pool);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    let</span><span style="color:var(--shiki-foreground)"> response </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)"> body</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">execute</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">state</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-foreground)">schema, </span><span style="color:var(--shiki-token-keyword)">&amp;</span><span style="color:var(--shiki-foreground)">context)</span><span style="color:var(--shiki-token-keyword)">.await</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    match</span><span style="color:var(--shiki-foreground)"> (response</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">is_ok</span><span style="color:var(--shiki-foreground)">(), serde_json</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">to_value</span><span style="color:var(--shiki-foreground)">(response)) {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        (</span><span style="color:var(--shiki-token-constant)">true</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Ok</span><span style="color:var(--shiki-foreground)">(v)) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-token-function)"> Ok</span><span style="color:var(--shiki-foreground)">(v),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        (</span><span style="color:var(--shiki-token-constant)">false</span><span style="color:var(--shiki-foreground)">, </span><span style="color:var(--shiki-token-function)">Ok</span><span style="color:var(--shiki-foreground)">(v)) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-token-function)"> Err</span><span style="color:var(--shiki-foreground)">(v),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">        (_, </span><span style="color:var(--shiki-token-function)">Err</span><span style="color:var(--shiki-foreground)">(e)) </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-token-function)"> Err</span><span style="color:var(--shiki-foreground)">(serde_json</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Value</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">String</span><span style="color:var(--shiki-foreground)">(e</span><span style="color:var(--shiki-token-keyword)">.</span><span style="color:var(--shiki-token-function)">to_string</span><span style="color:var(--shiki-foreground)">())),</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><p>然后在 <code translate="no">lib.rs</code> 中导入使用</p><div class="code-block"><pre class="shiki highlighting language-rust" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="rust"><code class="language-rust"><span class="line"><span style="color:var(--shiki-foreground)">#[cfg_attr(mobile, tauri</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">mobile_entry_point)]</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">pub</span><span style="color:var(--shiki-token-keyword)"> fn</span><span style="color:var(--shiki-token-function)"> run</span><span style="color:var(--shiki-foreground)">() {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    tauri</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">Builder</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">default</span><span style="color:var(--shiki-foreground)">()</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">plugin</span><span style="color:var(--shiki-foreground)">(tauri_plugin_opener</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">init</span><span style="color:var(--shiki-foreground)">())</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">invoke_handler</span><span style="color:var(--shiki-foreground)">(tauri</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">generate_handler!</span><span style="color:var(--shiki-foreground)">[commands</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">graphql</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-foreground)">graphql])</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">run</span><span style="color:var(--shiki-foreground)">(tauri</span><span style="color:var(--shiki-token-keyword)">::</span><span style="color:var(--shiki-token-function)">generate_context!</span><span style="color:var(--shiki-foreground)">())</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">        .</span><span style="color:var(--shiki-token-function)">expect</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"error while running tauri application"</span><span style="color:var(--shiki-foreground)">);</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre><button class="copy-code-button">copy</button></div><p>至此，便可以在前端以 <code translate="no">invoke</code> 形式调用了</p><div class="code-block"><pre class="shiki highlighting language-ts" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" language="ts"><code class="language-ts"><span class="line"><span style="color:var(--shiki-token-keyword)">import</span><span style="color:var(--shiki-foreground)"> { invoke } </span><span style="color:var(--shiki-token-keyword)">from</span><span style="color:var(--shiki-token-string-expression)"> '@tauri-apps/api/core'</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">const</span><span style="color:var(--shiki-token-function)"> graphql</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-token-keyword)"> async</span><span style="color:var(--shiki-foreground)"> &lt;</span><span style="color:var(--shiki-token-function)">T</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-token-constant)"> unknown</span><span style="color:var(--shiki-foreground)">&gt;(</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  query</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> string</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  variables</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> Record</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-constant)">string</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-constant)"> unknown</span><span style="color:var(--shiki-foreground)">&gt;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> Promise</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">T</span><span style="color:var(--shiki-foreground)">&gt; </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  return</span><span style="color:var(--shiki-token-function)"> invoke</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-string-expression)">"graphql"</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    body</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">      query</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">      variables</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  });</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">};</span></span></code></pre><button class="copy-code-button">copy</button></div><p>完整代码见：<a href="https://github.com/tonitrnel/tauri-graphql-demo/tree/9d6cbd6b7cd1d5a6311c5d348950b465ff13d300" rel="noonpener" class="external-link" target="_blank">github.com/tonitrnel/tauri-graphql-demo</a></p></article><noscript><style>.toc-panel nav { display: block; }.toc-toggle { display: none; }.toc-title { display: block; }</style></noscript></div><div class="post-metadata"><div class="post-tags"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>
+<circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg><ul class="post-tag-list" aria-label="文章标签列表"><li><a class="post-tag-link" href="/tags/tauri/">#tauri</a></li><li><a class="post-tag-link" href="/tags/rust/">#rust</a></li><li><a class="post-tag-link" href="/tags/graphql/">#graphql</a></li><li><a class="post-tag-link" href="/tags/sqlite/">#sqlite</a></li></ul></div><div class="post-meta-row" aria-label="文章分类"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg><a class="post-category-link" href="/categories/%E8%AE%B0%E5%BD%95/">记录</a></div><div class="post-meta-row" aria-label="文章统计"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-medium post-meta-icon" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/>
+<path d="M14 2v5a1 1 0 0 0 1 1h5"/>
+<path d="M10 9H8"/>
+<path d="M16 13H8"/>
+<path d="M16 17H8"/></svg><span class="post-word-count" aria-label="字数统计">4310 Words</span></div></div><nav class="post-navigation" aria-label="文章导航"><p class="post-navigation-item"><span class="post-navigation-label" aria-hidden="true">上一篇：</span><a class="post-navigation-link" href="/posts/2025-03-12-使用 Vue3 + TailwindCSS 编写组件样式时遇到的问题/" rel="prev" aria-label="上一篇：使用 Vue3 + TailwindCSS 编写组件样式时遇到的问题">使用 Vue3 + TailwindCSS 编写组件样式时遇到的问题</a></p><p class="post-navigation-item next"><span class="post-navigation-label" aria-hidden="true">下一篇：</span><a class="post-navigation-link" href="/posts/2025-03-23-在 Tauri 中使用 GraphQL (二。实现 Relay 风格的分页)/" rel="next" aria-label="下一篇：在 Tauri 中使用 GraphQL (二。实现 Relay 风格的分页)">在 Tauri 中使用 GraphQL (二。实现 Relay 风格的分页)</a></p></nav><div class="comments" id="comment" aria-label="文章评论" data-astro-cid-nuen6n26><button class="load-comments" type="button" aria-label="加载评论区" data-astro-cid-nuen6n26><span data-astro-cid-nuen6n26>載入評論</span></button></div><script type="module" src="/assets/Comments.astro_astro_type_script_index_0_lang.CxArsHF6.js"></script></main></div><footer data-astro-transition-scope="astro-jregkupr-6" class="site-footer" role="contentinfo" aria-label="网站页脚" data-astro-cid-fn43irff><div class="footer-copy" data-astro-cid-fn43irff><p class="footer-signature" aria-label="个性签名" data-astro-cid-fn43irff>窥视星辰流转，指引吾穿越未知旅程吧</p><p class="footer-details" aria-label="版权、协议与社交信息" data-astro-cid-fn43irff><span data-astro-cid-fn43irff>&copy; <time data-astro-cid-fn43irff>2026</time><a href="/about/" data-astro-cid-fn43irff>拂若華</a></span><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" aria-label="查看知识共享署名 4.0 协议" rel="license" title="本作品采用 CC BY 4.0 许可" data-astro-cid-fn43irff>CC BY-NC 4.0</a><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="/rss.xml" target="_blank" title="rss" aria-label="订阅本站 RSS 源" type="application/rss+xml" data-astro-cid-fn43irff><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-icon" data-astro-cid-fn43irff><path d="M4 11a9 9 0 0 1 9 9" data-astro-cid-fn43irff></path><path d="M4 4a16 16 0 0 1 16 16" data-astro-cid-fn43irff></path><circle cx="5" cy="19" r="1" data-astro-cid-fn43irff></circle></svg></a><i class="footer-separator" data-astro-cid-fn43irff>·</i><a href="https://github.com/tonitrnel" target="_blank" title="github" aria-label="访问作者 GitHub 主页" rel="me noopener noreferrer" data-astro-cid-fn43irff><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="footer-icon" data-astro-cid-fn43irff><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" data-astro-cid-fn43irff></path><path d="M9 18c-4.51 2-5-2-7-2" data-astro-cid-fn43irff></path></svg></a></p></div></footer><!-- build date: 2026-09-10T02:44:17.286Z ᓚᘏᗢ--></body></html><!-- Keep article layout available at first paint, including during development. --><style>
+  .post-opening-with-cover {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr);
+    align-items: center;
+    gap: 3rem;
+    width: min(calc(100vw - 4rem), 54rem);
+    margin-inline: calc((100% - min(calc(100vw - 4rem), 54rem)) / 2);
+    padding-block: 1rem 3rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 1rem;
+  }
+  .post-cover {
+    grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
+  }
+  .post-cover-image {
+    display: block;
+    height: 310px;
+    object-fit: cover;
+    width: 100%;
+  }
+  .post-heading {
+    position: relative;
+  }
+  .post-heading-with-cover {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: 1rem;
+  }
+  .post-heading-with-cover .post-published {
+    order: 1;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    opacity: 1;
+    font-weight: 400;
+  }
+  .post-heading-with-cover .md-title {
+    font-size: clamp(2rem, 3.3vw, 2.65rem);
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: 0.035em;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    text-wrap: balance;
+  }
+  @media (max-width: 700px) {
+    .post-opening-with-cover {
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+      margin-inline: 0;
+      gap: 2rem;
+      padding-block: 0 2rem;
+    }
+    .post-cover {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    .post-cover-image {
+      height: auto;
+      max-height: 260px;
+    }
+    .post-heading-with-cover {
+      padding-block: 0;
+    }
+    .post-heading-with-cover .md-title {
+      font-size: 2rem;
+    }
+  }
+  .post-published {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    opacity: 0.75;
+  }
+  .post-content {
+    margin-top: 2.5rem;
+    width: 100%;
+  }
+  .post-reading {
+    position: relative;
+    display: flow-root;
+  }
+  .post-metadata {
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    opacity: 0.85;
+  }
+  .post-tags,
+  .post-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .post-tags {
+    margin-top: 2rem;
+  }
+  .post-meta-row {
+    margin-block: 1rem;
+  }
+  .post-meta-icon {
+    margin-right: 0.5rem;
+  }
+  .post-tag-list {
+    display: flex;
+    gap: 0.75rem;
+    line-height: 1;
+  }
+  .post-category-link {
+    line-height: 1;
+    text-decoration: none;
+  }
+  .post-tag-link:hover,
+  .post-category-link:hover,
+  .post-navigation-link:hover {
+    text-decoration: underline;
+  }
+  .post-word-count {
+    padding-top: 0.125rem;
+    line-height: 1;
+  }
+  .post-modified {
+    font-style: italic;
+    span {
+      padding: 0 6px;
+    }
+  }
+  .post-navigation {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .post-navigation-item {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+  }
+  .post-navigation-item.next {
+    text-align: right;
+  }
+  .post-navigation-label {
+    opacity: 0.6;
+  }
+  .post-navigation-link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+</style><style>
+  .md-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.06em;
+    margin: 0.6rem 0 1.2rem;
+    overflow-wrap: anywhere;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  .md-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 3px;
+    width: 4rem;
+    border-radius: 2px;
+    opacity: 0.8;
+    background: linear-gradient(90deg, var(--secondary) 0%, transparent 85%);
+  }
+</style>
